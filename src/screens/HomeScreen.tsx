@@ -2,15 +2,18 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '@/types/navigation';
 import { COLORS } from '@/constants/colors';
 import { SPACING } from '@/constants/spacing';
 import { TEXT_STYLES } from '@/constants/typography';
 
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MainTabs'>;
+
 const HomeScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
 
   const handleComponentTest = () => {
-    // @ts-ignore - 임시로 타입 체크 무시
     navigation.navigate('ComponentTest');
   };
 

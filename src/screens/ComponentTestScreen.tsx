@@ -5,8 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '@/constants/colors';
 import { SPACING } from '@/constants/spacing';
 import { TEXT_STYLES } from '@/constants/typography';
@@ -52,15 +52,43 @@ const ComponentTestScreen: React.FC = () => {
     Alert.alert('버튼 클릭', `${title} 버튼이 클릭되었습니다!`);
   };
 
+  // 웹용 스크롤 컨테이너 - 간단하고 부드러운 스크롤
+  const WebScrollContainer = ({ children }: { children: React.ReactNode }) => (
+    <div
+      style={{
+        height: '100vh',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        paddingBottom: SPACING.XL,
+        // 부드러운 스크롤
+        WebkitOverflowScrolling: 'touch',
+        scrollBehavior: 'smooth',
+        // 스크롤바 스타일링
+        scrollbarWidth: 'thin',
+      } as any}
+    >
+      {children}
+    </div>
+  );
+
+  // 모바일용 스크롤 컨테이너
+  const MobileScrollContainer = ({ children }: { children: React.ReactNode }) => (
+    <ScrollView 
+      style={styles.scrollView} 
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={true}
+      bounces={true}
+    >
+      {children}
+    </ScrollView>
+  );
+
+  // 플랫폼별 스크롤 컨테이너 선택
+  const ScrollContainer = Platform.OS === 'web' ? WebScrollContainer : MobileScrollContainer;
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Header
-        title="컴포넌트 테스트"
-        showBackButton={true}
-        onBackPress={() => Alert.alert('뒤로가기', '뒤로가기 버튼이 클릭되었습니다!')}
-      />
-      
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      <ScrollContainer>
         {/* CustomButton 테스트 */}
         <Card padding="large" margin="medium" shadow="medium">
           <Text style={styles.sectionTitle}>🎯 CustomButton</Text>
@@ -118,12 +146,14 @@ const ComponentTestScreen: React.FC = () => {
               title="Loading"
               variant="primary"
               loading={true}
+              onPress={() => {}}
               style={styles.button}
             />
             <CustomButton
               title="Disabled"
               variant="primary"
               disabled={true}
+              onPress={() => {}}
               style={styles.button}
             />
             <CustomButton
@@ -251,7 +281,7 @@ const ComponentTestScreen: React.FC = () => {
             
             <Card 
               padding="medium" 
-              shadow="xl" 
+              shadow="large" 
               borderRadius="round"
               backgroundColor={COLORS.PRIMARY}
               style={styles.demoCard}
@@ -267,28 +297,109 @@ const ComponentTestScreen: React.FC = () => {
         <Card padding="large" margin="medium" shadow="medium">
           <Text style={styles.sectionTitle}>📱 Header</Text>
           <Text style={styles.sectionDescription}>
-            Safe Area 처리, 뒤로가기 버튼, 커스텀 오른쪽 컴포넌트를 지원하는 헤더
+            네비게이션 헤더를 사용하여 뒤로가기 기능을 제공합니다.
+            현재 화면 상단의 주황색 헤더가 네비게이션 헤더입니다.
           </Text>
           
           <View style={styles.headerDemo}>
-            <Header
-              title="커스텀 헤더"
-              showBackButton={true}
-              onBackPress={() => Alert.alert('뒤로가기', '뒤로가기 버튼이 클릭되었습니다!')}
-              rightComponent={
-                <CustomButton
-                  title="편집"
-                  variant="outline"
-                  size="small"
-                  onPress={() => Alert.alert('편집', '편집 버튼이 클릭되었습니다!')}
-                />
-              }
-              backgroundColor={COLORS.PRIMARY}
-              titleColor={COLORS.WHITE}
-            />
+            <View style={styles.headerInfo}>
+              <Text style={styles.headerInfoTitle}>네비게이션 헤더 특징</Text>
+              <Text style={styles.headerInfoText}>
+                • 자동 뒤로가기 버튼 제공{'\n'}
+                • Safe Area 자동 처리{'\n'}
+                • 플랫폼별 최적화{'\n'}
+                • 뒤로가기 제스처 지원
+              </Text>
+            </View>
           </View>
         </Card>
-      </ScrollView>
+
+        {/* 추가 테스트 섹션 - 스크롤 확인용 */}
+        <Card padding="large" margin="medium" shadow="medium">
+          <Text style={styles.sectionTitle}>📱 추가 테스트</Text>
+          <Text style={styles.sectionDescription}>
+            스크롤이 제대로 작동하는지 확인하기 위한 추가 섹션입니다.
+          </Text>
+          
+          <View style={styles.testGrid}>
+            <CustomButton
+              title="테스트 버튼 1"
+              variant="primary"
+              onPress={() => handleButtonPress('테스트 1')}
+              style={styles.testButton}
+            />
+            <CustomButton
+              title="테스트 버튼 2"
+              variant="secondary"
+              onPress={() => handleButtonPress('테스트 2')}
+              style={styles.testButton}
+            />
+          </View>
+          
+          <Text style={styles.testText}>
+            이 텍스트가 보인다면 스크롤이 정상적으로 작동하고 있습니다! 🎉
+          </Text>
+        </Card>
+
+        {/* 웹 스크롤 테스트용 추가 콘텐츠 */}
+        <Card padding="large" margin="medium" shadow="medium">
+          <Text style={styles.sectionTitle}>🌐 웹 스크롤 테스트</Text>
+          <Text style={styles.sectionDescription}>
+            웹에서 마우스 휠 스크롤이 제대로 작동하는지 확인하기 위한 추가 콘텐츠입니다.
+            아래로 스크롤해서 모든 카드를 확인해보세요!
+          </Text>
+          
+          <View style={styles.webTestGrid}>
+            {Array.from({ length: 8 }, (_, i) => (
+              <Card key={i} padding="medium" shadow="small" style={styles.webTestCard}>
+                <Text style={styles.webTestText}>웹 테스트 카드 {i + 1}</Text>
+                <Text style={styles.webTestSubtext}>
+                  이 카드들이 모두 보인다면 웹 스크롤이 정상 작동합니다!
+                </Text>
+              </Card>
+            ))}
+          </View>
+          
+          {/* 마우스 휠 테스트 안내 */}
+          <Card padding="medium" margin="medium" shadow="small" style={styles.wheelTestCard}>
+            <Text style={styles.wheelTestTitle}>🖱️ 마우스 휠 테스트</Text>
+            <Text style={styles.wheelTestText}>
+              이 섹션까지 마우스 휠로 스크롤할 수 있다면 성공입니다!
+            </Text>
+            <Text style={styles.wheelTestSubtext}>
+              • 마우스 휠 위/아래로 스크롤
+              • 터치패드 2손가락 스크롤
+              • 키보드 방향키로도 테스트 가능
+            </Text>
+            
+            {/* 스크롤 테스트 버튼들 */}
+            <View style={styles.scrollTestButtons}>
+              <CustomButton
+                title="맨 위로"
+                variant="primary"
+                size="small"
+                onPress={() => {
+                  if (Platform.OS === 'web') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                style={styles.scrollButton}
+              />
+              <CustomButton
+                title="맨 아래로"
+                variant="secondary"
+                size="small"
+                onPress={() => {
+                  if (Platform.OS === 'web') {
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                  }
+                }}
+                style={styles.scrollButton}
+              />
+            </View>
+          </Card>
+        </Card>
+      </ScrollContainer>
 
       {/* 오버레이 로딩 */}
       {showLoading && (
@@ -299,7 +410,7 @@ const ComponentTestScreen: React.FC = () => {
           text="로딩 중..."
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -311,6 +422,10 @@ const styles = StyleSheet.create({
   
   scrollView: {
     flex: 1,
+  },
+  
+  scrollContent: {
+    paddingBottom: SPACING.XL, // 하단 여백 추가
   },
   
   sectionTitle: {
@@ -386,6 +501,98 @@ const styles = StyleSheet.create({
     borderColor: COLORS.GRAY_200,
     borderRadius: SPACING.RADIUS.MD,
     overflow: 'hidden',
+  },
+  
+  headerInfo: {
+    padding: SPACING.MD,
+  },
+  headerInfoTitle: {
+    ...TEXT_STYLES.H5,
+    color: COLORS.TEXT_PRIMARY,
+    marginBottom: SPACING.SM,
+  },
+  headerInfoText: {
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
+    lineHeight: 20,
+  },
+  
+  // 추가 테스트용 스타일
+  testGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: SPACING.MD,
+    gap: SPACING.SM,
+  },
+  
+  testButton: {
+    flex: 1,
+  },
+  
+  testText: {
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.SUCCESS,
+    textAlign: 'center',
+    marginTop: SPACING.MD,
+    fontWeight: '600',
+  },
+
+  // 웹 스크롤 테스트용 스타일
+  webTestGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: SPACING.MD,
+    gap: SPACING.SM,
+  },
+  webTestCard: {
+    flex: 1,
+    minWidth: '48%', // 두 개씩 배치
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 80,
+    marginBottom: SPACING.SM,
+  },
+  webTestText: {
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_PRIMARY,
+    textAlign: 'center',
+    marginBottom: SPACING.SM,
+  },
+  webTestSubtext: {
+    ...TEXT_STYLES.CAPTION,
+    color: COLORS.TEXT_SECONDARY,
+    textAlign: 'center',
+  },
+  wheelTestCard: {
+    alignItems: 'center',
+  },
+  wheelTestTitle: {
+    ...TEXT_STYLES.H4,
+    color: COLORS.TEXT_PRIMARY,
+    marginBottom: SPACING.SM,
+  },
+  wheelTestText: {
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
+    textAlign: 'center',
+    marginBottom: SPACING.SM,
+  },
+  wheelTestSubtext: {
+    ...TEXT_STYLES.CAPTION,
+    color: COLORS.TEXT_SECONDARY,
+    textAlign: 'left',
+    lineHeight: 18,
+  },
+  scrollTestButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: SPACING.MD,
+    width: '100%',
+    gap: SPACING.SM,
+  },
+  scrollButton: {
+    flex: 1,
   },
 });
 

@@ -10,7 +10,8 @@ export type BottomTabParamList = {
 // 스택 네비게이션을 위한 루트 타입 (향후 확장용)
 export type RootStackParamList = {
   MainTabs: undefined;
-  ComponentTest: undefined;
+  ComponentTest: undefined; // 컴포넌트 테스트 화면
+  StorageTest: undefined; // 스토리지 테스트 화면
   // 향후 추가될 스크린들
   // SessionDetail: { sessionId: string };
   // GymDetail: { gymId: string };

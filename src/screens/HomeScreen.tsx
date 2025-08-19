@@ -7,6 +7,8 @@ import { RootStackParamList } from '@/types/navigation';
 import { COLORS } from '@/constants/colors';
 import { SPACING } from '@/constants/spacing';
 import { TEXT_STYLES } from '@/constants/typography';
+import { Card } from '@/components/Card';
+import { CustomButton } from '@/components/CustomButton';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MainTabs'>;
 
@@ -39,21 +41,28 @@ const HomeScreen = () => {
           </View>
         </View>
 
-        {/* Component Test Link */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🧩 컴포넌트 테스트</Text>
-          <TouchableOpacity 
-            style={styles.componentTestButton}
-            onPress={handleComponentTest}
-          >
-            <Text style={styles.componentTestButtonText}>
-              🎨 공통 컴포넌트 갤러리 보기
-            </Text>
-            <Text style={styles.componentTestButtonSubtext}>
-              CustomButton, CustomInput, LoadingSpinner, Card, Header 등
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* 컴포넌트 테스트 링크 */}
+        <Card padding="large" margin="medium" shadow="medium">
+          <Text style={styles.sectionTitle}>🧪 개발자 도구</Text>
+          <Text style={styles.sectionDescription}>
+            개발 중 테스트할 수 있는 도구들입니다.
+          </Text>
+          
+          <View style={styles.buttonGrid}>
+            <CustomButton
+              title="🎯 컴포넌트 테스트"
+              variant="primary"
+              onPress={() => navigation.navigate('ComponentTest')}
+              style={styles.button}
+            />
+            <CustomButton
+              title="💾 스토리지 테스트"
+              variant="secondary"
+              onPress={() => navigation.navigate('StorageTest')}
+              style={styles.button}
+            />
+          </View>
+        </Card>
 
         {/* Recent Activity */}
         <View style={styles.section}>
@@ -224,6 +233,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#92400e',
     textAlign: 'center',
+  },
+  buttonGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+    marginTop: 20,
+  },
+  button: {
+    flex: 1,
+  },
+  sectionDescription: {
+    fontSize: 14,
+    color: COLORS.GRAY_500,
+    marginBottom: 16,
   },
 });
 

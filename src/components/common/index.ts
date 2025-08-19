@@ -8,12 +8,12 @@ export { default as CustomInput } from './CustomInput';
 export { default as LoadingSpinner } from './LoadingSpinner';
 export { default as Card } from './Card';
 export { default as Header } from './Header';
+export { default as ErrorBoundary } from './ErrorBoundary';
 
 // 타입들도 함께 export
-export type {
-  ButtonProps,
-  InputProps,
-  LoadingSpinnerProps,
-  CardProps,
-  HeaderProps,
-} from '@/types/common';
+export type { ButtonProps } from './CustomButton';
+export type { InputProps } from './CustomInput';
+export type { LoadingSpinnerProps } from './LoadingSpinner';
+export type { CardProps } from './Card';
+export type { HeaderProps } from './Header';
+export type { Props as ErrorBoundaryProps } from './ErrorBoundary';

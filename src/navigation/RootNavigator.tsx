@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { RootStackParamList } from '@/types/navigation';
 import BottomTabNavigator from './BottomTabNavigator';
 import ComponentTestScreen from '@/screens/ComponentTestScreen';
+import StorageTestScreen from '@/screens/StorageTestScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -10,7 +11,7 @@ const Stack = createStackNavigator<RootStackParamList>();
  * 루트 스택 네비게이터
  * 
  * 하단 탭 네비게이션과 모달/스택 화면들을 관리
- * ComponentTest 화면을 포함하여 컴포넌트 테스트 가능
+ * ComponentTest 화면과 StorageTest 화면을 포함하여 테스트 가능
  */
 const RootNavigator: React.FC = () => {
   return (
@@ -35,6 +36,22 @@ const RootNavigator: React.FC = () => {
           headerBackTitle: '뒤로',
           headerStyle: {
             backgroundColor: '#FF6B35', // 주황색 배경
+          },
+          headerTintColor: '#FFFFFF', // 흰색 텍스트
+          headerTitleStyle: {
+            fontWeight: '600',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="StorageTest"
+        component={StorageTestScreen}
+        options={{
+          title: '스토리지 테스트',
+          headerShown: true, // 네비게이션 헤더 사용
+          headerBackTitle: '뒤로',
+          headerStyle: {
+            backgroundColor: '#2E86AB', // 파란색 배경
           },
           headerTintColor: '#FFFFFF', // 흰색 텍스트
           headerTitleStyle: {

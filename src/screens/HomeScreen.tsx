@@ -1,8 +1,19 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '@/constants/colors';
+import { SPACING } from '@/constants/spacing';
+import { TEXT_STYLES } from '@/constants/typography';
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
+
+  const handleComponentTest = () => {
+    // @ts-ignore - 임시로 타입 체크 무시
+    navigation.navigate('ComponentTest');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -23,6 +34,22 @@ const HomeScreen = () => {
               <Text style={styles.actionButtonText}>근처 암장 찾기</Text>
             </TouchableOpacity>
           </View>
+        </View>
+
+        {/* Component Test Link */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>🧩 컴포넌트 테스트</Text>
+          <TouchableOpacity 
+            style={styles.componentTestButton}
+            onPress={handleComponentTest}
+          >
+            <Text style={styles.componentTestButtonText}>
+              🎨 공통 컴포넌트 갤러리 보기
+            </Text>
+            <Text style={styles.componentTestButtonSubtext}>
+              CustomButton, CustomInput, LoadingSpinner, Card, Header 등
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Recent Activity */}
@@ -65,14 +92,14 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: COLORS.BACKGROUND,
   },
   scrollView: {
     flex: 1,
   },
   header: {
     padding: 20,
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.PRIMARY,
     marginBottom: 20,
   },
   title: {
@@ -93,7 +120,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#1f2937',
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: 16,
   },
   quickActions: {
@@ -103,7 +130,7 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     flex: 1,
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.PRIMARY,
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -112,6 +139,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: 'white',
+  },
+  componentTestButton: {
+    backgroundColor: COLORS.SECONDARY,
+    padding: 20,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: COLORS.SECONDARY_LIGHT,
+  },
+  componentTestButtonText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'white',
+    marginBottom: 8,
+  },
+  componentTestButtonSubtext: {
+    fontSize: 14,
+    color: 'white',
+    opacity: 0.8,
+    textAlign: 'center',
   },
   recentActivity: {
     backgroundColor: 'white',
@@ -128,12 +175,12 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: '#6b7280',
+    color: COLORS.GRAY_500,
     marginBottom: 8,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#9ca3af',
+    color: COLORS.GRAY_400,
   },
   statsContainer: {
     flexDirection: 'row',
@@ -155,12 +202,12 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B35',
+    color: COLORS.PRIMARY,
     marginBottom: 8,
   },
   statLabel: {
     fontSize: 14,
-    color: '#6b7280',
+    color: COLORS.GRAY_500,
   },
   noticeContainer: {
     padding: 20,

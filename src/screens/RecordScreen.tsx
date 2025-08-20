@@ -94,6 +94,38 @@ const RecordScreen = () => {
           <Text style={styles.subtitle}>클라이밍 세션 기록을 확인하세요</Text>
         </View>
 
+        {/* Monthly Stats - 최상단으로 이동 */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>이번 달 통계</Text>
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{monthlyStats.totalSessions}</Text>
+              <Text style={styles.statLabel}>세션</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>
+                {ClimbingDataService.formatDuration(monthlyStats.totalDuration)}
+              </Text>
+              <Text style={styles.statLabel}>총 시간</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{monthlyStats.averageCondition}</Text>
+              <Text style={styles.statLabel}>평균 컨디션</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{monthlyStats.totalRoutes}</Text>
+              <Text style={styles.statLabel}>루트</Text>
+            </View>
+          </View>
+          
+          {monthlyStats.totalSessions > 0 && (
+            <View style={styles.mostFrequentGym}>
+              <Text style={styles.mostFrequentGymLabel}>가장 많이 간 암장</Text>
+              <Text style={styles.mostFrequentGymName}>{monthlyStats.mostFrequentGym}</Text>
+            </View>
+          )}
+        </View>
+
         {/* Calendar */}
         <View style={styles.calendarContainer}>
           <View style={styles.calendarHeader}>
@@ -137,38 +169,6 @@ const RecordScreen = () => {
             }}
             style={styles.calendar}
           />
-        </View>
-
-        {/* Monthly Stats */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>이번 달 통계</Text>
-          <View style={styles.statsContainer}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{monthlyStats.totalSessions}</Text>
-              <Text style={styles.statLabel}>세션</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>
-                {ClimbingDataService.formatDuration(monthlyStats.totalDuration)}
-              </Text>
-              <Text style={styles.statLabel}>총 시간</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{monthlyStats.averageCondition}</Text>
-              <Text style={styles.statLabel}>평균 컨디션</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{monthlyStats.totalRoutes}</Text>
-              <Text style={styles.statLabel}>루트</Text>
-            </View>
-          </View>
-          
-          {monthlyStats.totalSessions > 0 && (
-            <View style={styles.mostFrequentGym}>
-              <Text style={styles.mostFrequentGymLabel}>가장 많이 간 암장</Text>
-              <Text style={styles.mostFrequentGymName}>{monthlyStats.mostFrequentGym}</Text>
-            </View>
-          )}
         </View>
 
         {/* Selected Date Info */}

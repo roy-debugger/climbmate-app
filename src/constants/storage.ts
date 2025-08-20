@@ -9,6 +9,7 @@ export const STORAGE_KEYS = {
   LAST_BACKUP: '@climbmate_last_backup',
   CACHE: '@climbmate_cache',
   MIGRATION_VERSION: '@climbmate_migration_version',
+  ONBOARDING_COMPLETED: '@climbmate_onboarding_completed',
 };
 
 export const STORAGE_CONFIG = {

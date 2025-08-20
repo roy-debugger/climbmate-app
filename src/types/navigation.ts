@@ -16,6 +16,9 @@ export type RootStackParamList = {
   Welcome: undefined;
   ProfileComplete: undefined; // 프로필 완성 화면
   Main: undefined;
+  // 온보딩 관련 화면들
+  Splash: undefined;
+  Onboarding: undefined;
   // 향후 추가될 스크린들
   // SessionDetail: { sessionId: string };
   // GymDetail: { gymId: string };

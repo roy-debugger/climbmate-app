@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useAuthStore from '../store/authStore';
+import OnboardingService from '../services/OnboardingService';
 
 const ProfileScreen = () => {
   const { user, logout } = useAuthStore();
@@ -43,6 +44,23 @@ const ProfileScreen = () => {
             },
           },
         ]
+      );
+    }
+  };
+
+  const handleResetOnboarding = async () => {
+    try {
+      await OnboardingService.resetOnboarding();
+      Alert.alert(
+        '온보딩 리셋',
+        '온보딩이 초기화되었습니다. 앱을 재시작하면 온보딩이 다시 표시됩니다.',
+        [{ text: '확인' }]
+      );
+    } catch (error) {
+      Alert.alert(
+        '오류',
+        '온보딩 리셋에 실패했습니다.',
+        [{ text: '확인' }]
       );
     }
   };
@@ -177,6 +195,12 @@ const ProfileScreen = () => {
             <TouchableOpacity style={styles.settingItem}>
               <Text style={styles.settingIcon}>📱</Text>
               <Text style={styles.settingText}>앱 정보</Text>
+              <Text style={styles.settingArrow}>›</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.settingItem} onPress={handleResetOnboarding}>
+              <Text style={styles.settingIcon}>🔄</Text>
+              <Text style={styles.settingText}>온보딩 다시보기</Text>
               <Text style={styles.settingArrow}>›</Text>
             </TouchableOpacity>
             

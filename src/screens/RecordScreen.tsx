@@ -322,8 +322,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.SURFACE,
     padding: SPACING.LAYOUT.CARD_PADDING,
     borderRadius: SPACING.RADIUS.MD,
-    alignItems: 'center',
+    marginTop: SPACING.MD,
     ...SPACING.SHADOW.SM,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.PRIMARY,
+  },
+  gymInfo: {
+    alignItems: 'center',
   },
   mostFrequentGymLabel: {
     ...TEXT_STYLES.BODY_SMALL,
@@ -333,6 +338,7 @@ const styles = StyleSheet.create({
   mostFrequentGymName: {
     ...TEXT_STYLES.H4,
     color: COLORS.PRIMARY,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },
   sessionsList: {
     gap: SPACING.MD,

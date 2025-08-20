@@ -9,7 +9,7 @@ import { ClimbingSession, MonthlyStats } from '../types/common';
 const DUMMY_SESSIONS: ClimbingSession[] = [
   {
     id: '1',
-    date: '2024-01-15',
+    date: '2025-08-15',
     gymName: '클라이밍존 강남점',
     duration: 150, // 2시간 30분
     condition: 8,
@@ -19,12 +19,12 @@ const DUMMY_SESSIONS: ClimbingSession[] = [
       { id: '1-3', grade: '5.10b', type: 'sport', status: 'attempted', attempts: 3 },
     ],
     notes: '컨디션 좋았음, 5.10b 프로젝트 시작',
-    createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-15'),
+    createdAt: new Date('2025-08-15'),
+    updatedAt: new Date('2025-08-15'),
   },
   {
     id: '2',
-    date: '2024-01-18',
+    date: '2025-08-18',
     gymName: '클라이밍파크 홍대점',
     duration: 120, // 2시간
     condition: 7,
@@ -34,12 +34,12 @@ const DUMMY_SESSIONS: ClimbingSession[] = [
       { id: '2-3', grade: 'V5', type: 'boulder', status: 'attempted', attempts: 5 },
     ],
     notes: '볼더링 집중, V5 도전',
-    createdAt: new Date('2024-01-18'),
-    updatedAt: new Date('2024-01-18'),
+    createdAt: new Date('2025-08-18'),
+    updatedAt: new Date('2025-08-18'),
   },
   {
     id: '3',
-    date: '2024-01-22',
+    date: '2025-08-22',
     gymName: '클라이밍존 강남점',
     duration: 180, // 3시간
     condition: 9,
@@ -49,12 +49,12 @@ const DUMMY_SESSIONS: ClimbingSession[] = [
       { id: '3-3', grade: '5.11b', type: 'sport', status: 'attempted', attempts: 4 },
     ],
     notes: '최고 컨디션! 5.11a 완등',
-    createdAt: new Date('2024-01-22'),
-    updatedAt: new Date('2024-01-22'),
+    createdAt: new Date('2025-08-22'),
+    updatedAt: new Date('2025-08-22'),
   },
   {
     id: '4',
-    date: '2024-01-25',
+    date: '2025-08-25',
     gymName: '클라이밍파크 홍대점',
     duration: 90, // 1시간 30분
     condition: 6,
@@ -63,12 +63,12 @@ const DUMMY_SESSIONS: ClimbingSession[] = [
       { id: '4-2', grade: 'V4', type: 'boulder', status: 'attempted', attempts: 6 },
     ],
     notes: '컨디션 떨어짐, 짧게 운동',
-    createdAt: new Date('2024-01-25'),
-    updatedAt: new Date('2024-01-25'),
+    createdAt: new Date('2025-08-25'),
+    updatedAt: new Date('2025-08-25'),
   },
   {
     id: '5',
-    date: '2024-01-28',
+    date: '2025-08-28',
     gymName: '클라이밍존 강남점',
     duration: 200, // 3시간 20분
     condition: 8,
@@ -79,12 +79,12 @@ const DUMMY_SESSIONS: ClimbingSession[] = [
       { id: '5-4', grade: '5.11b', type: 'sport', status: 'attempted', attempts: 5 },
     ],
     notes: '5.11a 완등 성공! 5.11b 도전',
-    createdAt: new Date('2024-01-28'),
-    updatedAt: new Date('2024-01-28'),
+    createdAt: new Date('2025-08-28'),
+    updatedAt: new Date('2025-08-28'),
   },
   {
     id: '6',
-    date: '2024-01-30',
+    date: '2025-08-30',
     gymName: '클라이밍파크 홍대점',
     duration: 150, // 2시간 30분
     condition: 7,
@@ -93,8 +93,8 @@ const DUMMY_SESSIONS: ClimbingSession[] = [
       { id: '6-2', grade: 'V5', type: 'boulder', status: 'attempted', attempts: 8 },
     ],
     notes: 'V5 프로젝트 계속, 점진적 발전',
-    createdAt: new Date('2024-01-30'),
-    updatedAt: new Date('2024-01-30'),
+    createdAt: new Date('2025-08-30'),
+    updatedAt: new Date('2025-08-30'),
   },
 ];
 

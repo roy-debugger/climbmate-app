@@ -4,22 +4,41 @@
  */
 
 // 색상 관련
-export * from './colors';
+export { COLORS } from './colors';
 
 // 타이포그래피 관련
-export * from './typography';
+export { FONTS } from './typography';
 
 // 간격 관련
-export * from './spacing';
+export { SPACING } from './spacing';
 
 // 레이아웃 관련
-export * from './layout';
+export { LAYOUT } from './layout';
+export type {
+  ButtonHeight,
+  ButtonPadding,
+  ButtonBorderRadius,
+  CardBorderRadius,
+  CardPadding,
+  CardMargin,
+  InputHeight,
+  InputPadding,
+  InputBorderRadius,
+  ModalBorderRadius,
+  ModalPadding,
+  HeaderHeight,
+  HeaderPadding,
+  ShadowSize,
+  AnimationDuration,
+  AnimationEasing,
+  ZIndex,
+} from './layout';
 
 // 테마 관련
-export * from './theme';
+export { COLORS as THEME_COLORS, SIZES, FONTS as THEME_FONTS, SHADOWS } from './theme';
 
 // 스토리지 관련
-export * from './storage';
+export { STORAGE_KEYS, STORAGE_CONFIG, STORAGE_ERRORS, MIGRATION_VERSIONS } from './storage';
 
 // API Configuration
 export const API_CONFIG = {
@@ -33,15 +52,6 @@ export const APP_CONFIG = {
   APP_NAME: 'ClimbMate',
   VERSION: '1.0.0',
   BUILD_NUMBER: '1',
-};
-
-// Storage Keys
-export const STORAGE_KEYS = {
-  USER_TOKEN: 'user_token',
-  USER_DATA: 'user_data',
-  SETTINGS: 'app_settings',
-  THEME: 'app_theme',
-  LANGUAGE: 'app_language',
 };
 
 // Climbing Grades

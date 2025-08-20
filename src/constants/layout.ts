@@ -177,3 +177,22 @@ export type ShadowSize = keyof typeof LAYOUT.SHADOW;
 export type AnimationDuration = keyof typeof LAYOUT.ANIMATION.DURATION;
 export type AnimationEasing = keyof typeof LAYOUT.ANIMATION.EASING;
 export type ZIndex = keyof typeof LAYOUT.Z_INDEX;
+
+// 유틸리티 함수들
+export const getButtonHeight = (size: ButtonHeight): number => LAYOUT.BUTTON.HEIGHT[size];
+export const getButtonPadding = (size: ButtonPadding) => LAYOUT.BUTTON.PADDING[size];
+export const getButtonBorderRadius = (size: ButtonBorderRadius): number => LAYOUT.BUTTON.BORDER_RADIUS[size];
+export const getCardBorderRadius = (size: CardBorderRadius): number => LAYOUT.CARD.BORDER_RADIUS[size];
+export const getCardPadding = (size: CardPadding): number => LAYOUT.CARD.PADDING[size];
+export const getCardMargin = (size: CardMargin): number => LAYOUT.CARD.MARGIN[size];
+export const getInputHeight = (size: InputHeight): number => LAYOUT.INPUT.HEIGHT[size];
+export const getInputPadding = (size: InputPadding) => LAYOUT.INPUT.PADDING[size];
+export const getInputBorderRadius = (size: InputBorderRadius): number => LAYOUT.INPUT.BORDER_RADIUS[size];
+export const getModalBorderRadius = (size: ModalBorderRadius): number => LAYOUT.MODAL.BORDER_RADIUS[size];
+export const getModalPadding = (size: ModalPadding): number => LAYOUT.MODAL.PADDING[size];
+export const getHeaderHeight = (size: HeaderHeight): number => LAYOUT.HEADER.HEIGHT[size];
+export const getHeaderPadding = (size: HeaderPadding) => LAYOUT.HEADER.PADDING[size];
+export const getShadow = (size: ShadowSize) => LAYOUT.SHADOW[size];
+export const getAnimationDuration = (size: AnimationDuration): number => LAYOUT.ANIMATION.DURATION[size];
+export const getAnimationEasing = (size: AnimationEasing): string => LAYOUT.ANIMATION.EASING[size];
+export const getZIndex = (size: ZIndex): number => LAYOUT.Z_INDEX[size];

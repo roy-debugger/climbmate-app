@@ -102,19 +102,17 @@ const RecordScreen = () => {
               <Text style={styles.statNumber}>{monthlyStats.totalSessions}</Text>
               <Text style={styles.statLabel}>세션</Text>
             </View>
+            
             <View style={styles.statItem}>
               <Text style={styles.statNumber}>
                 {Math.round(monthlyStats.totalDuration / 60 * 10) / 10}시간
               </Text>
               <Text style={styles.statLabel}>총 시간</Text>
             </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{monthlyStats.averageCondition}</Text>
-              <Text style={styles.statLabel}>평균 컨디션</Text>
-            </View>
+            
             <View style={styles.statItem}>
               <Text style={styles.statNumber}>{monthlyStats.totalRoutes}</Text>
-              <Text style={styles.statLabel}>루트</Text>
+              <Text style={styles.statLabel}>깬 문제</Text>
             </View>
           </View>
           
@@ -298,13 +296,12 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: SPACING.MD,
+    gap: SPACING.SM,
     marginBottom: SPACING.MD,
   },
   statItem: {
-    width: '48%', // 2x2 grid
+    flex: 1,
     backgroundColor: COLORS.SURFACE,
     padding: SPACING.LAYOUT.CARD_PADDING,
     borderRadius: SPACING.RADIUS.MD,

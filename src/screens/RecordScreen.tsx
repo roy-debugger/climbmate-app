@@ -104,7 +104,7 @@ const RecordScreen = () => {
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statNumber}>
-                {ClimbingDataService.formatDuration(monthlyStats.totalDuration)}
+                {Math.round(monthlyStats.totalDuration / 60 * 10) / 10}시간
               </Text>
               <Text style={styles.statLabel}>총 시간</Text>
             </View>
@@ -298,25 +298,33 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     flexDirection: 'row',
-    gap: SPACING.SM,
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: SPACING.MD,
     marginBottom: SPACING.MD,
   },
   statItem: {
-    flex: 1,
+    width: '48%', // 2x2 grid
     backgroundColor: COLORS.SURFACE,
     padding: SPACING.LAYOUT.CARD_PADDING,
     borderRadius: SPACING.RADIUS.MD,
     alignItems: 'center',
+    justifyContent: 'center',
     ...SPACING.SHADOW.SM,
+    minHeight: 100, // 최소 높이 설정
   },
   statNumber: {
     ...TEXT_STYLES.H2,
     color: COLORS.PRIMARY,
     marginBottom: SPACING.SM,
+    textAlign: 'center',
+    fontWeight: FONTS.WEIGHTS.BOLD,
   },
   statLabel: {
     ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.TEXT_SECONDARY,
+    textAlign: 'center',
+    fontWeight: FONTS.WEIGHTS.MEDIUM,
   },
   mostFrequentGym: {
     backgroundColor: COLORS.SURFACE,

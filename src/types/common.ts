@@ -188,3 +188,39 @@ export type FlexDirection = 'row' | 'column' | 'row-reverse' | 'column-reverse';
 export type JustifyContent = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
 export type AlignItems = 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
 export type AlignSelf = 'auto' | 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
+
+// 클라이밍 세션 관련 타입
+export interface ClimbingSession {
+  id: string;
+  date: string; // YYYY-MM-DD 형식
+  gymName: string;
+  duration: number; // 분 단위
+  condition: number; // 1-10 점수
+  routes: ClimbingRoute[];
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ClimbingRoute {
+  id: string;
+  grade: string; // 예: 5.10a, 6a+, V3
+  type: 'boulder' | 'sport' | 'trad';
+  status: 'completed' | 'attempted' | 'project';
+  attempts: number;
+  notes?: string;
+}
+
+export interface MonthlyStats {
+  totalSessions: number;
+  totalDuration: number; // 분 단위
+  averageCondition: number;
+  mostFrequentGym: string;
+  totalRoutes: number;
+}
+
+export interface CalendarDay {
+  date: string;
+  sessions: ClimbingSession[];
+  hasSessions: boolean;
+}

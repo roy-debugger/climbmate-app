@@ -7,9 +7,8 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { COLORS } from '@/constants/colors';
-import { SPACING } from '@/constants/spacing';
-import { TEXT_STYLES } from '@/constants/typography';
+import { COLORS, SPACING, FONTS, LAYOUT } from '@/constants';
+import { globalStyles } from '@/styles/globalStyles';
 import { ButtonProps } from '@/types/common';
 
 /**
@@ -105,11 +104,11 @@ const CustomButton: React.FC<ButtonProps> = ({
   const getTextSizeStyle = (): TextStyle => {
     switch (size) {
       case 'small':
-        return TEXT_STYLES.BUTTON_SMALL;
+        return FONTS.BUTTON_SMALL;
       case 'large':
-        return TEXT_STYLES.BUTTON_LARGE;
+        return FONTS.BUTTON_LARGE;
       default:
-        return TEXT_STYLES.BUTTON_MEDIUM;
+        return FONTS.BUTTON_MEDIUM;
     }
   };
   
@@ -146,16 +145,36 @@ const CustomButton: React.FC<ButtonProps> = ({
 };
 
 const styles = StyleSheet.create({
+  // 기본 버튼 스타일
   base: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: SPACING.RADIUS.MD,
-    borderWidth: SPACING.BORDER.NORMAL,
+    borderRadius: LAYOUT.BUTTON.BORDER_RADIUS.MEDIUM,
+    borderWidth: 1,
     borderColor: COLORS.TRANSPARENT,
   },
   
-  // Variant styles
+  // 크기별 스타일
+  small: {
+    height: LAYOUT.BUTTON.HEIGHT.SMALL,
+    paddingHorizontal: LAYOUT.BUTTON.PADDING.SMALL.horizontal,
+    paddingVertical: LAYOUT.BUTTON.PADDING.SMALL.vertical,
+  },
+  
+  medium: {
+    height: LAYOUT.BUTTON.HEIGHT.MEDIUM,
+    paddingHorizontal: LAYOUT.BUTTON.PADDING.MEDIUM.horizontal,
+    paddingVertical: LAYOUT.BUTTON.PADDING.MEDIUM.vertical,
+  },
+  
+  large: {
+    height: LAYOUT.BUTTON.HEIGHT.LARGE,
+    paddingHorizontal: LAYOUT.BUTTON.PADDING.LARGE.horizontal,
+    paddingVertical: LAYOUT.BUTTON.PADDING.LARGE.vertical,
+  },
+  
+  // variant별 스타일
   primary: {
     backgroundColor: COLORS.PRIMARY,
     borderColor: COLORS.PRIMARY,
@@ -174,33 +193,10 @@ const styles = StyleSheet.create({
   disabled: {
     backgroundColor: COLORS.GRAY_300,
     borderColor: COLORS.GRAY_300,
+    opacity: 0.6,
   },
   
-  // Size styles
-  small: {
-    paddingVertical: SPACING.COMPONENT.PADDING.XS,
-    paddingHorizontal: SPACING.COMPONENT.PADDING.SM,
-    minHeight: 36,
-  },
-  
-  medium: {
-    paddingVertical: SPACING.COMPONENT.PADDING.SM,
-    paddingHorizontal: SPACING.COMPONENT.PADDING.MD,
-    minHeight: 44,
-  },
-  
-  large: {
-    paddingVertical: SPACING.COMPONENT.PADDING.MD,
-    paddingHorizontal: SPACING.COMPONENT.PADDING.LG,
-    minHeight: 52,
-  },
-  
-  // Width styles
-  fullWidth: {
-    width: '100%',
-  },
-  
-  // Text styles
+  // 텍스트 스타일
   text: {
     textAlign: 'center',
     marginHorizontal: SPACING.XS,
@@ -208,14 +204,35 @@ const styles = StyleSheet.create({
   
   textLight: {
     color: COLORS.WHITE,
+    fontSize: FONTS.SIZES.MD,
+    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
   },
   
   textPrimary: {
     color: COLORS.PRIMARY,
+    fontSize: FONTS.SIZES.MD,
+    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
   },
   
   textDisabled: {
-    color: COLORS.GRAY_500,
+    color: COLORS.TEXT_DISABLED,
+    fontSize: FONTS.SIZES.MD,
+    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+  },
+  
+  // 아이콘 스타일
+  icon: {
+    marginHorizontal: SPACING.XS,
+  },
+  
+  // 전체 너비 스타일
+  fullWidth: {
+    width: '100%',
+  },
+  
+  // 로딩 스타일
+  loading: {
+    opacity: 0.8,
   },
 });
 

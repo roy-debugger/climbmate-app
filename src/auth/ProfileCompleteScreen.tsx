@@ -11,9 +11,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../constants/colors';
-import { SPACING } from '../constants/spacing';
-import { FONTS } from '../constants/typography';
+import { COLORS, SPACING, FONTS, LAYOUT } from '@/constants';
+import { globalStyles } from '@/styles/globalStyles';
 import { Card } from '../components/common';
 import useAuthStore from '../store/authStore';
 
@@ -76,7 +75,7 @@ const ProfileCompleteScreen: React.FC = () => {
     const profileData = {
       nickname: nickname.trim(),
       birthDate,
-      gender,
+      gender: gender || undefined,
       height: height.trim(),
       climbingLevel: selectedLevel.level as 'beginner' | 'intermediate' | 'advanced',
     };
@@ -397,6 +396,7 @@ const ProfileCompleteScreen: React.FC = () => {
  };
 
 const styles = StyleSheet.create({
+  container: globalStyles.container,
   scrollView: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
@@ -405,10 +405,6 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING.LG,
     flexGrow: 1,
     minHeight: '100%',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.BACKGROUND,
   },
   header: {
     alignItems: 'center',
@@ -423,13 +419,13 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: COLORS.PRIMARY,
-    borderBottomLeftRadius: SPACING.RADIUS.XL,
-    borderBottomRightRadius: SPACING.RADIUS.XL,
-    zIndex: -1,
+    borderBottomLeftRadius: LAYOUT.CARD.BORDER_RADIUS.XLARGE,
+    borderBottomRightRadius: LAYOUT.CARD.BORDER_RADIUS.XLARGE,
+    zIndex: LAYOUT.Z_INDEX.BASE,
   },
   title: {
     fontSize: FONTS.SIZES['2XL'],
-    fontWeight: '700',
+    fontWeight: FONTS.WEIGHTS.BOLD,
     color: COLORS.WHITE,
     marginTop: SPACING.LG,
     marginBottom: SPACING.SM,
@@ -439,40 +435,22 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     textAlign: 'center',
   },
-
   cardContainer: {
     marginBottom: SPACING.MD,
   },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.XS,
-  },
+  cardHeader: globalStyles.cardHeader,
   cardIcon: {
     fontSize: FONTS.SIZES.LG,
     marginRight: SPACING.XS,
   },
-  cardTitle: {
-    fontSize: FONTS.SIZES.MD,
-    fontWeight: '600',
-    color: COLORS.TEXT_PRIMARY,
-  },
+  cardTitle: globalStyles.cardTitle,
   levelDescription: {
     fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_SECONDARY,
     marginTop: SPACING.XS,
     marginBottom: SPACING.SM,
   },
-  input: {
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: SPACING.RADIUS.SM,
-    paddingVertical: SPACING.XS,
-    paddingHorizontal: SPACING.SM,
-    fontSize: FONTS.SIZES.SM,
-    color: COLORS.TEXT_PRIMARY,
-    borderWidth: 1,
-    borderColor: COLORS.GRAY_200,
-  },
+  input: globalStyles.input,
   helperText: {
     fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_SECONDARY,
@@ -489,7 +467,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: SPACING.XS,
     paddingHorizontal: SPACING.SM,
-    borderRadius: SPACING.RADIUS.SM,
+    borderRadius: LAYOUT.CARD.BORDER_RADIUS.SMALL,
     borderWidth: 1,
     borderColor: COLORS.GRAY_200,
   },
@@ -499,7 +477,7 @@ const styles = StyleSheet.create({
   },
   genderButtonText: {
     fontSize: FONTS.SIZES.SM,
-    fontWeight: '600',
+    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
     color: COLORS.TEXT_PRIMARY,
     marginLeft: SPACING.XS,
   },
@@ -520,7 +498,7 @@ const styles = StyleSheet.create({
   },
   heightUnit: {
     fontSize: FONTS.SIZES.SM,
-    fontWeight: '600',
+    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
     color: COLORS.TEXT_PRIMARY,
   },
   levelGrid: {
@@ -540,7 +518,7 @@ const styles = StyleSheet.create({
   levelButton: {
     width: 32,
     height: 32,
-    borderRadius: SPACING.RADIUS.SM,
+    borderRadius: LAYOUT.CARD.BORDER_RADIUS.SMALL,
     marginBottom: SPACING.XS,
     borderWidth: 1,
     borderColor: COLORS.GRAY_200,
@@ -554,13 +532,13 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
     marginTop: SPACING.XS,
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: FONTS.WEIGHTS.MEDIUM,
   },
   levelIndicator: {
     width: 20,
     height: 3,
     backgroundColor: COLORS.PRIMARY,
-    borderRadius: SPACING.RADIUS.SM,
+    borderRadius: LAYOUT.CARD.BORDER_RADIUS.SMALL,
     marginTop: SPACING.XS,
   },
   selectedLevelInfo: {
@@ -569,7 +547,7 @@ const styles = StyleSheet.create({
   },
   selectedLevelBadge: {
     backgroundColor: COLORS.PRIMARY,
-    borderRadius: SPACING.RADIUS.SM,
+    borderRadius: LAYOUT.CARD.BORDER_RADIUS.SMALL,
     paddingVertical: SPACING.SM,
     paddingHorizontal: SPACING.LG,
     alignItems: 'center',
@@ -580,7 +558,7 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.XS,
   },
   selectedLevelHighlight: {
-    fontWeight: '700',
+    fontWeight: FONTS.WEIGHTS.BOLD,
   },
   selectedLevelSubtext: {
     fontSize: FONTS.SIZES.SM,
@@ -591,22 +569,12 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING.LG,
     marginTop: SPACING.SM,
   },
-  completeButton: {
-    backgroundColor: COLORS.PRIMARY,
-    paddingVertical: SPACING.SM,
-    paddingHorizontal: SPACING.LG,
-    borderRadius: SPACING.RADIUS.SM,
-    alignItems: 'center',
-  },
-  completeButtonDisabled: {
-    backgroundColor: COLORS.GRAY_300,
-    opacity: 0.7,
-  },
-  completeButtonText: {
-    color: COLORS.WHITE,
-    fontSize: FONTS.SIZES.LG,
-    fontWeight: '600',
-  },
+  completeButton: StyleSheet.flatten([
+    globalStyles.button,
+    globalStyles.buttonPrimary,
+  ]),
+  completeButtonDisabled: globalStyles.buttonDisabled,
+  completeButtonText: globalStyles.buttonText,
   completeButtonSubtext: {
     fontSize: FONTS.SIZES.SM,
     color: COLORS.WHITE,
@@ -625,7 +593,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.SURFACE,
     borderWidth: 1,
     borderColor: COLORS.GRAY_200,
-    borderRadius: SPACING.RADIUS.SM,
+    borderRadius: LAYOUT.CARD.BORDER_RADIUS.SMALL,
     paddingVertical: SPACING.XS,
     paddingHorizontal: SPACING.SM,
     marginTop: SPACING.XS,
@@ -633,7 +601,7 @@ const styles = StyleSheet.create({
   dateButtonText: {
     fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_PRIMARY,
-    fontWeight: '500',
+    fontWeight: FONTS.WEIGHTS.MEDIUM,
   },
   dateButtonPlaceholder: {
     fontSize: FONTS.SIZES.SM,
@@ -643,26 +611,9 @@ const styles = StyleSheet.create({
     fontSize: FONTS.SIZES.LG,
   },
   // 모달 스타일
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: COLORS.WHITE,
-    borderRadius: SPACING.RADIUS.SM,
-    padding: SPACING.SM,
-    width: '80%',
-    maxWidth: 350,
-  },
-  modalTitle: {
-    fontSize: FONTS.SIZES.MD,
-    fontWeight: '600',
-    color: COLORS.TEXT_PRIMARY,
-    textAlign: 'center',
-    marginBottom: SPACING.SM,
-  },
+  modalOverlay: globalStyles.modalOverlay,
+  modalContent: globalStyles.modalContent,
+  modalTitle: globalStyles.modalTitle,
   datePickerContainer: {
     marginBottom: SPACING.SM,
   },
@@ -674,7 +625,7 @@ const styles = StyleSheet.create({
   dateLabel: {
     fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_PRIMARY,
-    fontWeight: '500',
+    fontWeight: FONTS.WEIGHTS.MEDIUM,
     width: 50,
   },
   dateInput: {
@@ -682,26 +633,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.SURFACE,
     borderWidth: 1,
     borderColor: COLORS.GRAY_200,
-    borderRadius: SPACING.RADIUS.SM,
+    borderRadius: LAYOUT.CARD.BORDER_RADIUS.SMALL,
     paddingVertical: SPACING.SM,
     paddingHorizontal: SPACING.SM,
     fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_PRIMARY,
     textAlign: 'center',
   },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  modalButton: {
-    flex: 1,
-    paddingVertical: SPACING.SM,
-    paddingHorizontal: SPACING.LG,
-    borderRadius: SPACING.RADIUS.SM,
-    borderWidth: 1,
-    borderColor: COLORS.GRAY_200,
-    marginHorizontal: SPACING.XS,
-  },
+  modalButtons: globalStyles.modalButtons,
+  modalButton: globalStyles.modalButton,
   modalButtonConfirm: {
     backgroundColor: COLORS.PRIMARY,
     borderColor: COLORS.PRIMARY,
@@ -710,38 +650,23 @@ const styles = StyleSheet.create({
     fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_PRIMARY,
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: FONTS.WEIGHTS.MEDIUM,
   },
   modalButtonTextConfirm: {
     color: COLORS.WHITE,
   },
-  successMessage: {
-    backgroundColor: COLORS.SUCCESS,
-    paddingVertical: SPACING.MD,
-    paddingHorizontal: SPACING.LG,
-    borderRadius: SPACING.RADIUS.MD,
-    alignItems: 'center',
-    marginTop: SPACING.MD,
-    marginHorizontal: SPACING.MD,
-    shadowColor: COLORS.BLACK,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  successMessageText: {
-    fontSize: FONTS.SIZES.LG,
-    fontWeight: '700',
-    color: COLORS.WHITE,
-    marginBottom: SPACING.XS,
-  },
-  successMessageSubtext: {
-    fontSize: FONTS.SIZES.SM,
-    color: COLORS.WHITE,
-    textAlign: 'center',
-    marginBottom: SPACING.XS,
-    opacity: 0.9,
-  },
+  successMessage: globalStyles.success,
+  successMessageText: StyleSheet.flatten([
+    globalStyles.textLarge,
+    globalStyles.textBold,
+    globalStyles.textCenter,
+    { marginBottom: SPACING.XS },
+  ]),
+  successMessageSubtext: StyleSheet.flatten([
+    globalStyles.textSmall,
+    globalStyles.textCenter,
+    { marginBottom: SPACING.XS, opacity: 0.9 },
+  ]),
 });
 
 export default ProfileCompleteScreen;

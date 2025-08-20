@@ -1,3 +1,8 @@
+// Import constants from other files
+export { COLORS } from './colors';
+export { SIZES } from './spacing';
+export { FONTS } from './typography';
+
 // API Configuration
 export const API_CONFIG = {
   BASE_URL: 'https://api.climbmate.com',

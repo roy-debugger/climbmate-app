@@ -140,7 +140,10 @@ export type AnimationDuration = keyof typeof SPACING.ANIMATION;
 export type ZIndex = keyof typeof SPACING.Z_INDEX;
 
 // 유틸리티 함수
-export const getSpacing = (size: SpacingSize): number => SPACING[size];
+export const getSpacing = (size: SpacingSize): number => {
+  const value = SPACING[size];
+  return typeof value === 'number' ? value : 0;
+};
 export const getComponentPadding = (size: ComponentPadding): number => SPACING.COMPONENT.PADDING[size];
 export const getComponentMargin = (size: ComponentMargin): number => SPACING.COMPONENT.MARGIN[size];
 export const getComponentGap = (size: ComponentGap): number => SPACING.COMPONENT.GAP[size];
@@ -153,3 +156,6 @@ export const getZIndex = (size: ZIndex): number => SPACING.Z_INDEX[size];
 // 계산 함수
 export const multiplySpacing = (base: number, multiplier: number): number => base * multiplier;
 export const divideSpacing = (base: number, divisor: number): number => base / divisor;
+
+// Legacy support for existing code
+export const SIZES = SPACING;

@@ -47,17 +47,25 @@
       "dom",
       "esnext"
     ],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "target": "esnext"
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx"
+    "src/auth/**/*.ts",
+    "src/auth/**/*.tsx",
+    "App.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/screens/**/*",
+    "src/components/**/*",
+    "src/services/**/*",
+    "src/types/**/*",
+    "src/utils/**/*",
+    "src/constants/**/*",
+    "src/navigation/**/*"
   ]
 }

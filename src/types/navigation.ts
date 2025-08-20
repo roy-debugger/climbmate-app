@@ -12,6 +12,10 @@ export type RootStackParamList = {
   MainTabs: undefined;
   ComponentTest: undefined; // 컴포넌트 테스트 화면
   StorageTest: undefined; // 스토리지 테스트 화면
+  // 인증 관련 화면들
+  Welcome: undefined;
+  Login: undefined;
+  Main: undefined;
   // 향후 추가될 스크린들
   // SessionDetail: { sessionId: string };
   // GymDetail: { gymId: string };

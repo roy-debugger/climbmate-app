@@ -1,8 +1,31 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import useAuthStore from '@/store/authStore';
 
 const ProfileScreen = () => {
+  const { user, logout } = useAuthStore();
+
+  const handleLogout = () => {
+    Alert.alert(
+      '로그아웃',
+      '정말 로그아웃하시겠습니까?',
+      [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '로그아웃',
+          style: 'destructive',
+          onPress: () => {
+            logout();
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -11,8 +34,13 @@ const ProfileScreen = () => {
           <View style={styles.avatarContainer}>
             <Text style={styles.avatar}>🧗‍♀️</Text>
           </View>
-          <Text style={styles.userName}>클라이밍러</Text>
-          <Text style={styles.userLevel}>중급자 • 2년 경력</Text>
+          <Text style={styles.userName}>{user?.nickname || '클라이밍러'}</Text>
+          <Text style={styles.userLevel}>
+            {user?.climbingLevel === 'beginner' && '초급자'}
+            {user?.climbingLevel === 'intermediate' && '중급자'}
+            {user?.climbingLevel === 'advanced' && '고급자'}
+            {' • 클라이밍러'}
+          </Text>
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
               <Text style={styles.statNumber}>156</Text>
@@ -128,6 +156,12 @@ const ProfileScreen = () => {
             <TouchableOpacity style={styles.settingItem}>
               <Text style={styles.settingIcon}>📱</Text>
               <Text style={styles.settingText}>앱 정보</Text>
+              <Text style={styles.settingArrow}>›</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
+              <Text style={styles.settingIcon}>🚪</Text>
+              <Text style={styles.settingText}>로그아웃</Text>
               <Text style={styles.settingArrow}>›</Text>
             </TouchableOpacity>
           </View>

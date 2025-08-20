@@ -6,10 +6,9 @@ import {
   StyleSheet,
   Modal,
 } from 'react-native';
-import { COLORS } from '@/constants/colors';
-import { SPACING } from '@/constants/spacing';
-import { TEXT_STYLES } from '@/constants/typography';
-import { LoadingSpinnerProps } from '@/types/common';
+import { COLORS } from '../../constants/colors';
+import { SPACING } from '../../constants/spacing';
+import { LoadingSpinnerProps } from '../../types/common';
 
 /**
  * LoadingSpinner 컴포넌트
@@ -119,8 +118,10 @@ const styles = StyleSheet.create({
   },
   
   text: {
-    ...TEXT_STYLES.BODY_MEDIUM,
+    fontSize: 16,
+    fontWeight: '500',
     textAlign: 'center',
+    marginTop: SPACING.SM,
   },
   
   // Overlay styles

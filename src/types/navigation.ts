@@ -14,7 +14,7 @@ export type RootStackParamList = {
   StorageTest: undefined; // 스토리지 테스트 화면
   // 인증 관련 화면들
   Welcome: undefined;
-  Login: undefined;
+  ProfileComplete: undefined; // 프로필 완성 화면
   Main: undefined;
   // 향후 추가될 스크린들
   // SessionDetail: { sessionId: string };

@@ -7,17 +7,35 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS, SPACING, FONTS } from './constants';
-import { KakaoLoginButton } from './KakaoLoginButton';
+import { COLORS } from '../constants/colors';
+import { SPACING } from '../constants/spacing';
+import { FONTS } from '../constants/typography';
+import KakaoLoginButton from './KakaoLoginButton';
+import useAuthStore from '../store/authStore';
+import { mockKakaoService } from '../services/kakaoService';
 
-export const WelcomeScreen: React.FC = () => {
-  const navigation = useNavigation();
+const WelcomeScreen: React.FC = () => {
+  const { kakaoLogin, setLoading } = useAuthStore();
 
-  const handleKakaoLogin = () => {
-    // 로그인 화면으로 이동
-    // @ts-ignore - 네비게이션 타입 문제 임시 해결
-    navigation.navigate('Login');
+  const handleKakaoLogin = async () => {
+    try {
+      console.log('🔐 카카오 로그인 시작');
+      setLoading(true);
+      
+      // Mock 카카오 서비스로 로그인
+      const kakaoUser = await mockKakaoService.login();
+      
+      // 인증 스토어에 사용자 정보 저장
+      kakaoLogin(kakaoUser);
+      
+      Alert.alert('🎉 로그인 성공!', '프로필을 완성해주세요.');
+      
+    } catch (error) {
+      console.error('❌ 카카오 로그인 실패:', error);
+      Alert.alert('❌ 로그인 실패', '다시 시도해주세요.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -77,13 +95,13 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.LG,
   },
   title: {
-    fontSize: FONTS['3XL'],
+    fontSize: FONTS.SIZES['3XL'],
     fontWeight: '700',
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.SM,
   },
   subtitle: {
-    fontSize: FONTS.LG,
+    fontSize: FONTS.SIZES.LG,
     color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
   },
@@ -92,20 +110,22 @@ const styles = StyleSheet.create({
     marginVertical: SPACING['2XL'],
   },
   illustrationText: {
-    fontSize: FONTS.LG,
+    fontSize: FONTS.SIZES.LG,
     color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
     marginTop: SPACING.LG,
-    lineHeight: FONTS.LG * 1.5,
+    lineHeight: FONTS.SIZES.LG * 1.5,
   },
   loginSection: {
     marginBottom: SPACING['2XL'],
   },
   termsText: {
-    fontSize: FONTS.XS,
+    fontSize: FONTS.SIZES.XS,
     color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
     marginTop: SPACING.LG,
-    lineHeight: FONTS.XS * 1.4,
+    lineHeight: FONTS.SIZES.XS * 1.4,
   },
 });
+
+export default WelcomeScreen;

@@ -7,25 +7,43 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS } from './constants';
+import { COLORS } from '../constants/colors';
+import { SPACING } from '../constants/spacing';
+import { FONTS } from '../constants/typography';
+import useAuthStore from '../store/authStore';
+import { mockKakaoService } from '../services/kakaoService';
 
 interface KakaoLoginButtonProps {
   onPress?: () => void;
 }
 
-export const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({
+const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({
   onPress,
 }) => {
-  const handlePress = () => {
+  const { kakaoLogin, setLoading } = useAuthStore();
+
+  const handlePress = async () => {
     if (onPress) {
       onPress();
     } else {
-      // 임시로 알럿 표시 (실제 SDK 연동 전까지)
-      Alert.alert(
-        '카카오 로그인',
-        '카카오 로그인 기능이 준비 중입니다.\n2-2 단계에서 실제 연동을 진행합니다.',
-        [{ text: '확인' }]
-      );
+      try {
+        console.log('🔐 카카오 로그인 시작 (버튼)');
+        setLoading(true);
+        
+        // Mock 카카오 서비스로 로그인
+        const kakaoUser = await mockKakaoService.login();
+        
+        // 인증 스토어에 사용자 정보 저장
+        kakaoLogin(kakaoUser);
+        
+        Alert.alert('🎉 로그인 성공!', '프로필을 완성해주세요.');
+        
+      } catch (error) {
+        console.error('❌ 카카오 로그인 실패:', error);
+        Alert.alert('❌ 로그인 실패', '다시 시도해주세요.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -36,7 +54,7 @@ export const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({
       activeOpacity={0.8}
     >
       <View style={styles.content}>
-        <Ionicons name="chatbubble" size={20} color={COLORS.KAKAO_BROWN} />
+        <Ionicons name="chatbubble" size={20} color={COLORS.BLACK} />
         <Text style={styles.text}>카카오로 3초만에 시작하기</Text>
       </View>
     </TouchableOpacity>
@@ -45,10 +63,10 @@ export const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: COLORS.KAKAO_YELLOW,
-    borderRadius: SPACING.MD,
-    paddingVertical: SPACING.LG,
-    paddingHorizontal: SPACING.XL,
+    backgroundColor: '#FEE500', // 카카오 노란색
+    borderRadius: SPACING.RADIUS.MD,
+    paddingVertical: SPACING.COMPONENT.PADDING.LG,
+    paddingHorizontal: SPACING.COMPONENT.PADDING.XL,
     marginHorizontal: SPACING.LG,
     shadowColor: COLORS.BLACK,
     shadowOffset: { width: 0, height: 2 },
@@ -63,8 +81,10 @@ const styles = StyleSheet.create({
     gap: SPACING.SM,
   },
   text: {
-    color: COLORS.KAKAO_BROWN,
-    fontSize: FONTS.LG,
+    color: COLORS.BLACK,
+    fontSize: FONTS.SIZES.LG,
     fontWeight: '600',
   },
 });
+
+export default KakaoLoginButton;

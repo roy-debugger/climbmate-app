@@ -54,18 +54,7 @@
     "target": "esnext"
   },
   "include": [
-    "src/auth/**/*.ts",
-    "src/auth/**/*.tsx",
+    "src/**/*",
     "App.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/screens/**/*",
-    "src/components/**/*",
-    "src/services/**/*",
-    "src/types/**/*",
-    "src/utils/**/*",
-    "src/constants/**/*",
-    "src/navigation/**/*"
   ]
 }

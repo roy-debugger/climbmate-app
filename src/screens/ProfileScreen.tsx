@@ -1,14 +1,28 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  ScrollView, 
+  TouchableOpacity, 
+  Alert, 
+  TextInput 
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import useAuthStore from '@/store/authStore';
+import { Ionicons } from '@expo/vector-icons';
+import { COLORS } from '../constants/colors';
+import { SPACING } from '../constants/spacing';
+import { FONTS } from '../constants/typography';
+import useAuthStore from '../store/authStore';
 
 const ProfileScreen = () => {
-  const { user, logout } = useAuthStore();
+  const { user, updateProfile, logout } = useAuthStore();
+  const [isEditingNickname, setIsEditingNickname] = useState(false);
+  const [newNickname, setNewNickname] = useState(user?.nickname || '');
 
   const handleLogout = () => {
     Alert.alert(
-      '로그아웃',
+      '🚪 로그아웃',
       '정말 로그아웃하시겠습니까?',
       [
         {
@@ -19,6 +33,7 @@ const ProfileScreen = () => {
           text: '로그아웃',
           style: 'destructive',
           onPress: () => {
+            console.log('🚪 로그아웃 실행');
             logout();
           },
         },
@@ -26,32 +41,115 @@ const ProfileScreen = () => {
     );
   };
 
+  const handleNicknameEdit = () => {
+    if (isEditingNickname) {
+      // 저장 모드
+      if (newNickname.trim() === '') {
+        Alert.alert('❌ 오류', '닉네임을 입력해주세요.');
+        return;
+      }
+      
+      if (newNickname === user?.nickname) {
+        setIsEditingNickname(false);
+        return;
+      }
+
+      console.log('📝 닉네임 수정:', { old: user?.nickname, new: newNickname });
+      updateProfile({ nickname: newNickname.trim() });
+      setIsEditingNickname(false);
+      Alert.alert('✅ 성공', '닉네임이 수정되었습니다.');
+    } else {
+      // 편집 모드
+      setNewNickname(user?.nickname || '');
+      setIsEditingNickname(true);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setNewNickname(user?.nickname || '');
+    setIsEditingNickname(false);
+  };
+
+  const getLevelText = (level: string) => {
+    switch (level) {
+      case 'beginner': return '초급자';
+      case 'intermediate': return '중급자';
+      case 'advanced': return '고급자';
+      default: return '미정';
+    }
+  };
+
+  if (!user) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.errorText}>사용자 정보를 찾을 수 없습니다.</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.avatarContainer}>
-            <Text style={styles.avatar}>🧗‍♀️</Text>
+            <Ionicons name="person-circle" size={80} color={COLORS.PRIMARY} />
           </View>
-          <Text style={styles.userName}>{user?.nickname || '클라이밍러'}</Text>
+          
+          {/* 닉네임 편집 */}
+          <View style={styles.nicknameSection}>
+            {isEditingNickname ? (
+              <View style={styles.nicknameEditContainer}>
+                <TextInput
+                  style={styles.nicknameInput}
+                  value={newNickname}
+                  onChangeText={setNewNickname}
+                  placeholder="닉네임을 입력하세요"
+                  autoFocus
+                  maxLength={20}
+                />
+                <View style={styles.editButtons}>
+                  <TouchableOpacity style={styles.saveButton} onPress={handleNicknameEdit}>
+                    <Ionicons name="checkmark" size={20} color={COLORS.WHITE} />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.cancelButton} onPress={handleCancelEdit}>
+                    <Ionicons name="close" size={20} color={COLORS.ERROR} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <View style={styles.nicknameDisplay}>
+                <Text style={styles.userName}>{user.nickname}</Text>
+                <TouchableOpacity style={styles.editIcon} onPress={handleNicknameEdit}>
+                  <Ionicons name="pencil" size={20} color={COLORS.PRIMARY} />
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+
           <Text style={styles.userLevel}>
-            {user?.climbingLevel === 'beginner' && '초급자'}
-            {user?.climbingLevel === 'intermediate' && '중급자'}
-            {user?.climbingLevel === 'advanced' && '고급자'}
-            {' • 클라이밍러'}
+            {getLevelText(user.climbingLevel)} • 클라이밍러
           </Text>
+          
+          <Text style={styles.userEmail}>{user.email}</Text>
+        </View>
+
+        {/* User Stats */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>📊 클라이밍 통계</Text>
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>156</Text>
+              <Text style={styles.statNumber}>0</Text>
               <Text style={styles.statLabel}>세션</Text>
             </View>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>89</Text>
+              <Text style={styles.statNumber}>0</Text>
               <Text style={styles.statLabel}>완등</Text>
             </View>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>5.11a</Text>
+              <Text style={styles.statNumber}>-</Text>
               <Text style={styles.statLabel}>최고급수</Text>
             </View>
           </View>
@@ -59,117 +157,29 @@ const ProfileScreen = () => {
 
         {/* Quick Actions */}
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>⚡ 빠른 액션</Text>
           <View style={styles.quickActions}>
             <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.actionIcon}>✏️</Text>
-              <Text style={styles.actionText}>프로필 편집</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.actionIcon}>⚙️</Text>
+              <Ionicons name="settings-outline" size={24} color={COLORS.PRIMARY} />
               <Text style={styles.actionText}>설정</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.actionIcon}>📊</Text>
-              <Text style={styles.actionText}>통계</Text>
+              <Ionicons name="help-circle-outline" size={24} color={COLORS.PRIMARY} />
+              <Text style={styles.actionText}>도움말</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionButton}>
+              <Ionicons name="information-circle-outline" size={24} color={COLORS.PRIMARY} />
+              <Text style={styles.actionText}>정보</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Achievements */}
+        {/* Logout Button */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🏆 업적</Text>
-          <View style={styles.achievementsList}>
-            <View style={styles.achievementItem}>
-              <Text style={styles.achievementIcon}>🥇</Text>
-              <View style={styles.achievementInfo}>
-                <Text style={styles.achievementTitle}>첫 완등</Text>
-                <Text style={styles.achievementDesc}>첫 번째 루트를 완등했습니다</Text>
-              </View>
-            </View>
-            
-            <View style={styles.achievementItem}>
-              <Text style={styles.achievementIcon}>🔥</Text>
-              <View style={styles.achievementInfo}>
-                <Text style={styles.achievementTitle}>연속 클라이밍</Text>
-                <Text style={styles.achievementDesc}>7일 연속으로 클라이밍했습니다</Text>
-              </View>
-            </View>
-            
-            <View style={styles.achievementItem}>
-              <Text style={styles.achievementIcon}>⭐</Text>
-              <View style={styles.achievementInfo}>
-                <Text style={styles.achievementTitle}>급수 상승</Text>
-                <Text style={styles.achievementDesc}>5.10급을 완등했습니다</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* Goals */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🎯 목표</Text>
-          <View style={styles.goalsList}>
-            <View style={styles.goalItem}>
-              <View style={styles.goalInfo}>
-                <Text style={styles.goalTitle}>월간 세션 목표</Text>
-                <Text style={styles.goalProgress}>12/15 세션</Text>
-              </View>
-              <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: '80%' }]} />
-              </View>
-            </View>
-            
-            <View style={styles.goalItem}>
-              <View style={styles.goalInfo}>
-                <Text style={styles.goalTitle}>5.11b 완등</Text>
-                <Text style={styles.goalProgress}>진행 중</Text>
-              </View>
-              <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: '60%' }]} />
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* Settings */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>설정</Text>
-          <View style={styles.settingsList}>
-            <TouchableOpacity style={styles.settingItem}>
-              <Text style={styles.settingIcon}>🔔</Text>
-              <Text style={styles.settingText}>알림 설정</Text>
-              <Text style={styles.settingArrow}>›</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.settingItem}>
-              <Text style={styles.settingIcon}>🌙</Text>
-              <Text style={styles.settingText}>다크 모드</Text>
-              <Text style={styles.settingArrow}>›</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.settingItem}>
-              <Text style={styles.settingIcon}>🌍</Text>
-              <Text style={styles.settingText}>언어 설정</Text>
-              <Text style={styles.settingArrow}>›</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.settingItem}>
-              <Text style={styles.settingIcon}>📱</Text>
-              <Text style={styles.settingText}>앱 정보</Text>
-              <Text style={styles.settingArrow}>›</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
-              <Text style={styles.settingIcon}>🚪</Text>
-              <Text style={styles.settingText}>로그아웃</Text>
-              <Text style={styles.settingArrow}>›</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Implementation Notice */}
-        <View style={styles.noticeContainer}>
-          <Text style={styles.noticeText}>구현 예정: 프로필 편집, 상세 통계, 업적 시스템, 목표 관리</Text>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={20} color={COLORS.ERROR} />
+            <Text style={styles.logoutButtonText}>로그아웃</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -179,212 +189,148 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: COLORS.BACKGROUND,
   },
   scrollView: {
     flex: 1,
   },
-  profileHeader: {
-    padding: 20,
-    backgroundColor: '#f59e0b',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  avatarContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'white',
+  content: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
-  avatar: {
-    fontSize: 40,
+  profileHeader: {
+    alignItems: 'center',
+    paddingVertical: SPACING.XL,
+    paddingHorizontal: SPACING.LG,
+  },
+  avatarContainer: {
+    marginBottom: SPACING.LG,
+  },
+  nicknameSection: {
+    alignItems: 'center',
+    marginBottom: SPACING.MD,
+  },
+  nicknameDisplay: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.SM,
+  },
+  nicknameEditContainer: {
+    alignItems: 'center',
+    gap: SPACING.SM,
+  },
+  nicknameInput: {
+    backgroundColor: COLORS.SURFACE,
+    borderWidth: 1,
+    borderColor: COLORS.PRIMARY,
+    borderRadius: SPACING.RADIUS.MD,
+    paddingHorizontal: SPACING.MD,
+    paddingVertical: SPACING.SM,
+    fontSize: FONTS.SIZES.XL,
+    fontWeight: '600',
+    textAlign: 'center',
+    minWidth: 150,
+  },
+  editButtons: {
+    flexDirection: 'row',
+    gap: SPACING.SM,
+  },
+  saveButton: {
+    backgroundColor: COLORS.SUCCESS,
+    padding: SPACING.SM,
+    borderRadius: SPACING.RADIUS.SM,
+  },
+  cancelButton: {
+    backgroundColor: COLORS.SURFACE,
+    padding: SPACING.SM,
+    borderRadius: SPACING.RADIUS.SM,
+    borderWidth: 1,
+    borderColor: COLORS.ERROR,
+  },
+  editIcon: {
+    padding: SPACING.XS,
   },
   userName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 8,
+    fontSize: FONTS.SIZES.XL,
+    fontWeight: '700',
+    color: COLORS.TEXT_PRIMARY,
   },
   userLevel: {
-    fontSize: 16,
-    color: 'white',
-    opacity: 0.9,
-    marginBottom: 20,
+    fontSize: FONTS.SIZES.LG,
+    color: COLORS.TEXT_SECONDARY,
+    marginBottom: SPACING.SM,
+  },
+  userEmail: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
+  },
+  section: {
+    paddingHorizontal: SPACING.LG,
+    marginBottom: SPACING.XL,
+  },
+  sectionTitle: {
+    fontSize: FONTS.SIZES.LG,
+    fontWeight: '600',
+    color: COLORS.TEXT_PRIMARY,
+    marginBottom: SPACING.MD,
   },
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '100%',
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: SPACING.RADIUS.MD,
+    padding: SPACING.LG,
   },
   statItem: {
     alignItems: 'center',
   },
   statNumber: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 4,
+    fontSize: FONTS.SIZES['2XL'],
+    fontWeight: '700',
+    color: COLORS.PRIMARY,
+    marginBottom: SPACING.XS,
   },
   statLabel: {
-    fontSize: 12,
-    color: 'white',
-    opacity: 0.8,
-  },
-  section: {
-    padding: 20,
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: 16,
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
   },
   quickActions: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
+    justifyContent: 'space-around',
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: SPACING.RADIUS.MD,
+    padding: SPACING.LG,
   },
   actionButton: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  actionIcon: {
-    fontSize: 24,
-    marginBottom: 8,
+    gap: SPACING.SM,
   },
   actionText: {
-    fontSize: 14,
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_PRIMARY,
     fontWeight: '500',
-    color: '#1f2937',
   },
-  achievementsList: {
-    gap: 12,
-  },
-  achievementItem: {
-    backgroundColor: 'white',
+  logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    justifyContent: 'center',
+    backgroundColor: COLORS.SURFACE,
+    paddingVertical: SPACING.LG,
+    paddingHorizontal: SPACING.XL,
+    borderRadius: SPACING.RADIUS.MD,
+    borderWidth: 1,
+    borderColor: COLORS.ERROR,
+    gap: SPACING.SM,
   },
-  achievementIcon: {
-    fontSize: 32,
-    marginRight: 16,
-  },
-  achievementInfo: {
-    flex: 1,
-  },
-  achievementTitle: {
-    fontSize: 16,
+  logoutButtonText: {
+    fontSize: FONTS.SIZES.LG,
+    color: COLORS.ERROR,
     fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: 4,
   },
-  achievementDesc: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  goalsList: {
-    gap: 12,
-  },
-  goalItem: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  goalInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  goalTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1f2937',
-  },
-  goalProgress: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  progressBar: {
-    height: 8,
-    backgroundColor: '#e5e7eb',
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#f59e0b',
-    borderRadius: 4,
-  },
-  settingsList: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-  },
-  settingIcon: {
-    fontSize: 20,
-    marginRight: 16,
-  },
-  settingText: {
-    flex: 1,
-    fontSize: 16,
-    color: '#1f2937',
-  },
-  settingArrow: {
-    fontSize: 18,
-    color: '#9ca3af',
-  },
-  noticeContainer: {
-    padding: 20,
-    backgroundColor: '#fef3c7',
-    margin: 20,
-    borderRadius: 12,
-    borderLeftWidth: 4,
-    borderLeftColor: '#f59e0b',
-  },
-  noticeText: {
-    fontSize: 14,
-    color: '#92400e',
+  errorText: {
+    fontSize: FONTS.SIZES.LG,
+    color: COLORS.ERROR,
     textAlign: 'center',
   },
 });

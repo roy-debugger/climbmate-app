@@ -1,3 +1,12 @@
+// Export all constants
+export * from './colors';
+export * from './spacing';
+export * from './typography';
+
+// SIZES와 FONTS는 TYPOGRAPHY에서 가져옴
+export { TYPOGRAPHY as FONTS } from './typography';
+export { SPACING as SIZES } from './spacing';
+
 // API Configuration
 export const API_CONFIG = {
   BASE_URL: 'https://api.climbmate.com',

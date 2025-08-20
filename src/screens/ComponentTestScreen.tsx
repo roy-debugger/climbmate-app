@@ -17,6 +17,10 @@ import {
   Card,
   Header,
 } from '@/components/common';
+import {
+  KakaoLoginButton,
+  SimpleLevelSelector,
+} from '@/components/auth';
 
 /**
  * 컴포넌트 테스트 화면
@@ -314,6 +318,32 @@ const ComponentTestScreen: React.FC = () => {
           </View>
         </Card>
 
+        {/* Auth Components 테스트 */}
+        <Card padding="large" margin="medium" shadow="medium">
+          <Text style={styles.sectionTitle}>🔐 Auth Components</Text>
+          <Text style={styles.sectionDescription}>
+            카카오 로그인 및 프로필 완성을 위한 인증 컴포넌트들
+          </Text>
+          
+          {/* 카카오 로그인 버튼 테스트 */}
+          <View style={styles.authSection}>
+            <Text style={styles.authSectionTitle}>카카오 로그인 버튼</Text>
+            <KakaoLoginButton />
+            <KakaoLoginButton disabled={true} />
+          </View>
+          
+          {/* 레벨 선택기 테스트 */}
+          <View style={styles.authSection}>
+            <Text style={styles.authSectionTitle}>클라이밍 레벨 선택</Text>
+            <SimpleLevelSelector
+              selectedLevel="intermediate"
+              onLevelSelect={(level) => {
+                Alert.alert('레벨 선택', `선택된 레벨: ${level}`);
+              }}
+            />
+          </View>
+        </Card>
+
         {/* 추가 테스트 섹션 - 스크롤 확인용 */}
         <Card padding="large" margin="medium" shadow="medium">
           <Text style={styles.sectionTitle}>📱 추가 테스트</Text>
@@ -593,6 +623,16 @@ const styles = StyleSheet.create({
   },
   scrollButton: {
     flex: 1,
+  },
+  
+  // Auth Components 테스트용 스타일
+  authSection: {
+    marginBottom: SPACING.LG,
+  },
+  authSectionTitle: {
+    ...TEXT_STYLES.H5,
+    color: COLORS.TEXT_PRIMARY,
+    marginBottom: SPACING.MD,
   },
 });
 

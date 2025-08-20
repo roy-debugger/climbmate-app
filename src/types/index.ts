@@ -1,16 +1,17 @@
+// Auth related types
+export * from './auth';
+
 // User related types
 export interface User {
   id: string;
   username: string;
   email: string;
   profileImage?: string;
-  climbingLevel: ClimbingLevel;
+  climbingLevel: 'beginner' | 'intermediate' | 'advanced';
   joinDate: Date;
   totalSessions: number;
   favoriteGyms: string[];
 }
-
-export type ClimbingLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 
 // Climbing session types
 export interface ClimbingSession {
@@ -77,6 +78,10 @@ export interface TimeRange {
 // Navigation types
 export type RootStackParamList = {
   Main: undefined;
+  Welcome: undefined;
+  ProfileComplete: { kakaoUser: import('./auth').KakaoUser };
+  ComponentTest: undefined;
+  StorageTest: undefined;
   Login: undefined;
   Register: undefined;
   Profile: { userId: string };
@@ -110,18 +115,6 @@ export interface PaginatedResponse<T> {
 }
 
 // Form types
-export interface LoginForm {
-  email: string;
-  password: string;
-}
-
-export interface RegisterForm {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
 export interface SessionForm {
   gymId: string;
   date: Date;

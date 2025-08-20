@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Alert } from 'react-native';
 import { COLORS } from '@/constants/colors';
 import { SPACING } from '@/constants/spacing';
 import { TEXT_STYLES } from '@/constants/typography';
-import { CustomButton } from './CustomButton';
+import CustomButton from './CustomButton';
 
 interface Props {
   children: ReactNode;

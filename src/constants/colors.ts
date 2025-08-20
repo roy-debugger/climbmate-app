@@ -51,6 +51,8 @@ export const COLORS = {
   FACEBOOK: '#1877F2',
   GOOGLE: '#DB4437',
   APPLE: '#000000',
+  KAKAO: '#FEE500',         // 카카오 공식 노란색
+  KAKAO_TEXT: '#000000',    // 카카오 텍스트 색상
   
   // Transparent
   TRANSPARENT: 'transparent',
@@ -63,6 +65,18 @@ export const COLORS = {
   GRAY_LIGHT: '#F1F3F4',
   GRAY_MEDIUM: '#9CA3AF',
   GRAY_DARK: '#6B7280',
+  
+  // 기존 코드와의 호환성을 위한 소문자 별칭
+  primary: '#FF6B35',
+  secondary: '#2E86AB', 
+  background: '#F8F9FA',
+  surface: '#FFFFFF',
+  white: '#FFFFFF',
+  black: '#000000',
+  textPrimary: '#1F2937',
+  textSecondary: '#6B7280',
+  lightGray: '#F1F3F4',
+  success: '#16A34A',
 } as const;
 
 // 색상 타입 정의

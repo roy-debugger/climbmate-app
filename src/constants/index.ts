@@ -40,6 +40,9 @@ export { COLORS as THEME_COLORS, SIZES, FONTS as THEME_FONTS, SHADOWS } from './
 // 스토리지 관련
 export { STORAGE_KEYS, STORAGE_CONFIG, STORAGE_ERRORS, MIGRATION_VERSIONS } from './storage';
 
+// 개발 모드 관련
+export { DEV_CONFIG, isDevMode, setDevMode, enableProductionMode } from './dev';
+
 // API Configuration
 export const API_CONFIG = {
   BASE_URL: 'https://api.climbmate.com',

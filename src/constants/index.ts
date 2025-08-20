@@ -21,24 +21,6 @@ export * from './theme';
 // 스토리지 관련
 export * from './storage';
 
-// 통합 상수 객체 (기존 코드 호환성)
-export const CONSTANTS = {
-  COLORS: require('./colors').COLORS,
-  FONTS: require('./typography').FONTS,
-  SPACING: require('./spacing').SPACING,
-  LAYOUT: require('./layout').LAYOUT,
-  THEME: require('./theme').THEME,
-  STORAGE: require('./storage').STORAGE,
-} as const;
-
-// 레거시 지원 (기존 코드 호환성)
-export const COLORS = CONSTANTS.COLORS;
-export const FONTS = CONSTANTS.FONTS;
-export const SPACING = CONSTANTS.SPACING;
-export const LAYOUT = CONSTANTS.LAYOUT;
-export const THEME = CONSTANTS.THEME;
-export const STORAGE = CONSTANTS.STORAGE;
-
 // API Configuration
 export const API_CONFIG = {
   BASE_URL: 'https://api.climbmate.com',

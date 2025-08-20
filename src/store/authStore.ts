@@ -7,6 +7,9 @@ interface User {
   profileImage: string;
   climbingLevel: 'beginner' | 'intermediate' | 'advanced';
   email: string;
+  birthDate?: string;
+  gender?: 'male' | 'female' | 'other';
+  height?: string;
 }
 
 interface AuthState {
@@ -52,12 +55,37 @@ const useAuthStore = create<AuthState>((set, get) => ({
   },
   
   updateProfile: (updates: Partial<User>) => {
-    console.log('📝 프로필 업데이트:', updates);
-    set((state) => ({
-      user: state.user ? { ...state.user, ...updates } : null,
-      isProfileComplete: true
-    }));
-    console.log('✅ 프로필 업데이트 완료, 사용자 정보:', get().user);
+    console.log('📝 프로필 업데이트 시작:', updates);
+    
+    try {
+      set((state) => {
+        // user가 null인 경우 기본 사용자 객체 생성
+        const currentUser = state.user || {
+          id: 'temp_id',
+          kakaoId: 'temp_kakao_id',
+          nickname: '클라이머',
+          profileImage: '',
+          climbingLevel: 'beginner' as const,
+          email: 'temp@example.com'
+        };
+        
+        const updatedUser = { ...currentUser, ...updates };
+        
+        console.log('📝 기존 사용자:', currentUser);
+        console.log('📝 업데이트된 사용자:', updatedUser);
+        
+        return {
+          user: updatedUser,
+          isProfileComplete: true
+        };
+      });
+      
+      console.log('✅ 프로필 업데이트 완료, 사용자 정보:', get().user);
+      console.log('✅ 프로필 완성 상태:', get().isProfileComplete);
+    } catch (error) {
+      console.error('❌ 프로필 업데이트 중 오류 발생:', error);
+      throw error; // 오류를 다시 던져서 호출자에서 처리할 수 있도록 함
+    }
   },
   
   setLoading: (loading: boolean) => {

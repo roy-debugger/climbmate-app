@@ -30,88 +30,97 @@ const RootNavigator: React.FC = () => {
     return <LoadingSpinner overlay text="로그인 중..." />;
   }
   
-  return (
-    <NavigationContainer>
-      {isAuthenticated ? (
-        isProfileComplete ? (
-          // 인증됨 + 프로필 완성: 메인 화면
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
+  // 프로필 완성 상태에 따른 화면 결정
+  if (isAuthenticated && isProfileComplete) {
+    console.log('🏠 메인 탭 네비게이션으로 이동');
+    return (
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen
+            name="MainTabs"
+            component={BottomTabNavigator}
+            options={{
+              title: 'ClimbMate',
             }}
-          >
-            <Stack.Screen
-              name="MainTabs"
-              component={BottomTabNavigator}
-              options={{
-                title: 'ClimbMate',
-              }}
-            />
-            <Stack.Screen
-              name="ComponentTest"
-              component={ComponentTestScreen}
-              options={{
-                title: '컴포넌트 테스트',
-                headerShown: true,
-                headerBackTitle: '뒤로',
-                headerStyle: {
-                  backgroundColor: '#FF6B35',
-                },
-                headerTintColor: '#FFFFFF',
-                headerTitleStyle: {
-                  fontWeight: '600',
-                },
-              }}
-            />
-            <Stack.Screen
-              name="StorageTest"
-              component={StorageTestScreen}
-              options={{
-                title: '스토리지 테스트',
-                headerShown: true,
-                headerBackTitle: '뒤로',
-                headerStyle: {
-                  backgroundColor: '#2E86AB',
-                },
-                headerTintColor: '#FFFFFF',
-                headerTitleStyle: {
-                  fontWeight: '600',
-                },
-              }}
-            />
-          </Stack.Navigator>
-        ) : (
-          // 인증됨 + 프로필 미완성: 프로필 완성 화면
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
+          />
+          <Stack.Screen
+            name="ComponentTest"
+            component={ComponentTestScreen}
+            options={{
+              title: '컴포넌트 테스트',
+              headerShown: true,
+              headerBackTitle: '뒤로',
+              headerStyle: {
+                backgroundColor: '#FF6B35',
+              },
+              headerTintColor: '#FFFFFF',
+              headerTitleStyle: {
+                fontWeight: '600',
+              },
             }}
-          >
-            <Stack.Screen 
-              name="ProfileComplete" 
-              component={ProfileCompleteScreen}
-              options={{
-                title: '프로필 완성',
-              }}
-            />
-          </Stack.Navigator>
-        )
-      ) : (
-        // 인증 안됨: 웰컴 화면
+          />
+          <Stack.Screen
+            name="StorageTest"
+            component={StorageTestScreen}
+            options={{
+              title: '스토리지 테스트',
+              headerShown: true,
+              headerBackTitle: '뒤로',
+              headerStyle: {
+                backgroundColor: '#2E86AB',
+              },
+              headerTintColor: '#FFFFFF',
+              headerTitleStyle: {
+                fontWeight: '600',
+              },
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+  
+  if (isAuthenticated && !isProfileComplete) {
+    console.log('📝 프로필 완성 화면으로 이동');
+    return (
+      <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
           }}
         >
           <Stack.Screen 
-            name="Welcome" 
-            component={WelcomeScreen}
+            name="ProfileComplete" 
+            component={ProfileCompleteScreen}
             options={{
-              title: '환영',
+              title: '프로필 완성',
             }}
           />
         </Stack.Navigator>
-      )}
+      </NavigationContainer>
+    );
+  }
+  
+  console.log('👋 웰컴 화면으로 이동');
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen 
+          name="Welcome" 
+          component={WelcomeScreen}
+          options={{
+            title: '환영',
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

@@ -3,189 +3,744 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   Alert,
+  ScrollView,
+  TextInput,
+  Modal,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../constants/colors';
 import { SPACING } from '../constants/spacing';
 import { FONTS } from '../constants/typography';
+import { Card } from '../components/common';
 import useAuthStore from '../store/authStore';
+
+// 클라이밍 레벨 색상 정의 (요청된 순서로 변경)
+const CLIMBING_LEVELS = [
+  { color: '#FFFFFF', name: '흰색', level: 'beginner', gradient: ['#FFFFFF', '#F5F5F5'] },
+  { color: '#FFD93D', name: '노랑', level: 'beginner', gradient: ['#FFD93D', '#FFE66D'] },
+  { color: '#FFA07A', name: '주황', level: 'beginner', gradient: ['#FFA07A', '#FFB88C'] },
+  { color: '#6BCF7F', name: '초록', level: 'beginner', gradient: ['#6BCF7F', '#8ED6A3'] },
+  { color: '#4ECDC4', name: '파랑', level: 'intermediate', gradient: ['#4ECDC4', '#7DDCD3'] },
+  { color: '#FF6B6B', name: '빨강', level: 'intermediate', gradient: ['#FF6B6B', '#FF8E8E'] },
+  { color: '#A78BFA', name: '보라', level: 'intermediate', gradient: ['#A78BFA', '#C4A8FF'] },
+  { color: '#9E9E9E', name: '회색', level: 'advanced', gradient: ['#9E9E9E', '#BDBDBD'] },
+  { color: '#8D6E63', name: '갈색', level: 'advanced', gradient: ['#8D6E63', '#A1887F'] },
+  { color: '#424242', name: '검정', level: 'advanced', gradient: ['#424242', '#616161'] },
+];
 
 const ProfileCompleteScreen: React.FC = () => {
   const { user, updateProfile } = useAuthStore();
-  const [selectedLevel, setSelectedLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
+  const navigation = useNavigation<any>();
+  
+  // 상태 관리
+  const [nickname, setNickname] = useState(user?.nickname || '');
+  const [birthDate, setBirthDate] = useState('');
+  const [gender, setGender] = useState<'male' | 'female' | 'other' | ''>('');
+  const [height, setHeight] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState<typeof CLIMBING_LEVELS[0] | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tempDate, setTempDate] = useState(new Date());
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  const handleProfileComplete = () => {
-    if (!user) {
-      Alert.alert('❌ 오류', '사용자 정보를 찾을 수 없습니다.');
+  // 성별 옵션
+  const genderOptions = [
+    { value: 'male', label: '남성', icon: '👨' },
+    { value: 'female', label: '여성', icon: '👩' },
+    { value: 'other', label: '기타', icon: '👤' },
+  ];
+
+  // 프로필 완성 처리
+  const handleComplete = () => {
+    console.log('📝 프로필 완성 버튼 클릭');
+    console.log('📝 현재 상태:', { nickname, birthDate, gender, height, selectedLevel });
+    
+    // 입력값 검증
+    if (!nickname.trim()) {
+      console.log('❌ 닉네임 누락');
+      // Alert 대신 console.warn 사용
+      console.warn('❌ 오류: 닉네임을 입력해주세요.');
       return;
     }
 
-    console.log('📝 프로필 완성 시작:', { selectedLevel });
-    
-    // 프로필 업데이트
-    updateProfile({
-      climbingLevel: selectedLevel
-    });
 
-    Alert.alert('🎉 프로필 완성!', '메인 화면으로 이동합니다.');
+    if (!selectedLevel) {
+      console.log('❌ 클라이밍 레벨 누락');
+      console.warn('❌ 오류: 클라이밍 레벨을 선택해주세요.');
+      return;
+    }
+
+    // 프로필 업데이트
+    const profileData = {
+      nickname: nickname.trim(),
+      birthDate,
+      gender,
+      height: height.trim(),
+      climbingLevel: selectedLevel.level as 'beginner' | 'intermediate' | 'advanced',
+    };
+
+    console.log('📝 프로필 완성 데이터:', profileData);
+    
+    // 프로필 업데이트 실행
+    try {
+      console.log('🔄 updateProfile 호출 시작');
+      updateProfile(profileData);
+      console.log('✅ 프로필 업데이트 성공');
+      
+      // 성공 메시지 표시 - Alert 대신 console.log 사용
+      console.log('🎉 프로필 완성! 프로필이 성공적으로 완성되었습니다.');
+      console.log('✅ 프로필 완성 확인됨, 홈으로 이동');
+      
+      // 성공 메시지 표시
+      setShowSuccessMessage(true);
+      
+      // 2초 후 자동으로 홈으로 이동
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        // RootNavigator에서 자동으로 MainTabs로 이동하도록 함
+        // updateProfile에서 isProfileComplete가 true로 설정되면 자동 이동됨
+      }, 2000);
+      
+    } catch (error) {
+      console.error('❌ 프로필 업데이트 실패:', error);
+      console.warn('❌ 오류: 프로필 업데이트에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
-  const climbingLevels = [
-    { key: 'beginner', label: '초급자', description: '클라이밍을 처음 시작하는 분' },
-    { key: 'intermediate', label: '중급자', description: '기본기를 갖춘 분' },
-    { key: 'advanced', label: '고급자', description: '고난도 루트를 오르는 분' }
-  ] as const;
+  // 날짜 선택 모달 열기
+  const openDatePicker = () => {
+    setShowDatePicker(true);
+  };
 
-  if (!user) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.errorText}>사용자 정보를 찾을 수 없습니다.</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  // 날짜 선택 완료
+  const handleDateConfirm = () => {
+    const formattedDate = tempDate.toISOString().split('T')[0];
+    setBirthDate(formattedDate);
+    setShowDatePicker(false);
+  };
+
+  // 날짜 선택 취소
+  const handleDateCancel = () => {
+    setShowDatePicker(false);
+  };
+
+  // 날짜 변경
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    if (selectedDate) {
+      setTempDate(selectedDate);
+    }
+  };
+
+  // 키 입력 (숫자만)
+  const handleHeightInput = (text: string) => {
+    const cleaned = text.replace(/[^0-9]/g, '');
+    if (cleaned.length <= 3) {
+      setHeight(cleaned);
+    }
+  };
+
+  // 레벨 텍스트 가져오기
+  const getLevelText = (level: string) => {
+    switch (level) {
+      case 'beginner': return '초보자';
+      case 'intermediate': return '중급자';
+      case 'advanced': return '고급자';
+      default: return '미정';
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView 
+        style={styles.scrollView} 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={true}
+        showsHorizontalScrollIndicator={false}
+        bounces={true}
+        alwaysBounceVertical={true}
+        scrollEnabled={true}
+        nestedScrollEnabled={false}
+        keyboardShouldPersistTaps="handled"
+        overScrollMode="always"
+        removeClippedSubviews={false}
+        directionalLockEnabled={true}
+        automaticallyAdjustContentInsets={false}
+        contentInsetAdjustmentBehavior="never"
+      >
         {/* 헤더 */}
         <View style={styles.header}>
-          <Ionicons name="person-circle" size={80} color={COLORS.PRIMARY} />
+          <View style={styles.headerBackground} />
           <Text style={styles.title}>프로필 완성</Text>
-          <Text style={styles.subtitle}>안녕하세요, {user.nickname}님!</Text>
+          <Text style={styles.subtitle}>클라이밍을 시작하기 전에 프로필을 완성해주세요</Text>
         </View>
+
+        {/* 닉네임 입력 */}
+        <Card padding="medium" margin="none" shadow="small" style={styles.cardContainer}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardIcon}>👤</Text>
+            <Text style={styles.cardTitle}>닉네임</Text>
+          </View>
+          <TextInput
+            style={styles.input}
+            value={nickname}
+            onChangeText={setNickname}
+            placeholder="닉네임을 입력하세요"
+            maxLength={20}
+            autoFocus
+          />
+          <Text style={styles.helperText}>카카오에서 가져온 닉네임입니다. 수정 가능합니다.</Text>
+        </Card>
+
+        {/* 생년월일 입력 */}
+        <Card padding="medium" margin="none" shadow="small" style={styles.cardContainer}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardIcon}>📅</Text>
+            <Text style={styles.cardTitle}>생년월일 (선택사항)</Text>
+          </View>
+          <TouchableOpacity style={styles.dateButton} onPress={openDatePicker}>
+            <Text style={birthDate ? styles.dateButtonText : styles.dateButtonPlaceholder}>
+              {birthDate || '생년월일을 선택하세요'}
+            </Text>
+            <Text style={styles.dateButtonIcon}>📅</Text>
+          </TouchableOpacity>
+          <Text style={styles.helperText}>생년월일을 선택하면 더 정확한 추천을 받을 수 있습니다</Text>
+        </Card>
+
+        {/* 성별 선택 */}
+        <Card padding="medium" margin="none" shadow="small" style={styles.cardContainer}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardIcon}>⚧</Text>
+            <Text style={styles.cardTitle}>성별 (선택사항)</Text>
+          </View>
+          <View style={styles.genderContainer}>
+            {genderOptions.map((option) => (
+              <TouchableOpacity
+                key={option.value}
+                style={[
+                  styles.genderButton,
+                  gender === option.value && styles.genderButtonSelected,
+                ]}
+                onPress={() => setGender(option.value as any)}
+              >
+                <Text style={styles.genderIcon}>{option.icon}</Text>
+                <Text
+                  style={[
+                    styles.genderButtonText,
+                    gender === option.value && styles.genderButtonTextSelected,
+                  ]}
+                >
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </Card>
+
+        {/* 키 입력 */}
+        <Card padding="medium" margin="none" shadow="small" style={styles.cardContainer}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardIcon}>📏</Text>
+            <Text style={styles.cardTitle}>키 (선택사항)</Text>
+          </View>
+          <View style={styles.heightContainer}>
+            <TextInput
+              style={[styles.input, styles.heightInput]}
+              value={height}
+              onChangeText={handleHeightInput}
+              placeholder="170"
+              maxLength={3}
+              keyboardType="numeric"
+            />
+            <Text style={styles.heightUnit}>cm</Text>
+          </View>
+        </Card>
 
         {/* 클라이밍 레벨 선택 */}
-        <View style={styles.levelSection}>
-          <Text style={styles.sectionTitle}>클라이밍 레벨을 선택해주세요</Text>
+        <Card padding="medium" margin="none" shadow="small" style={styles.cardContainer}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardIcon}>🧗‍♀️</Text>
+            <Text style={styles.cardTitle}>클라이밍 레벨</Text>
+          </View>
+          <Text style={styles.levelDescription}>
+            현재 클라이밍할 수 있는 최고 난이도를 선택해주세요
+          </Text>
           
-          {climbingLevels.map((level) => (
-            <TouchableOpacity
-              key={level.key}
-              style={[
-                styles.levelOption,
-                selectedLevel === level.key && styles.selectedLevel
-              ]}
-              onPress={() => setSelectedLevel(level.key)}
-            >
-              <View style={styles.levelContent}>
-                <Text style={[
-                  styles.levelLabel,
-                  selectedLevel === level.key && styles.selectedLevelText
-                ]}>
-                  {level.label}
+          <View style={styles.levelGrid}>
+            {CLIMBING_LEVELS.map((level, index) => (
+              <View key={index} style={styles.levelButtonContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.levelButton,
+                    { backgroundColor: level.color },
+                    selectedLevel?.color === level.color && styles.levelButtonSelected,
+                  ]}
+                  onPress={() => setSelectedLevel(level)}
+                />
+                <Text style={styles.levelName}>{level.name}</Text>
+                {selectedLevel?.color === level.color && (
+                  <View style={styles.levelIndicator} />
+                )}
+              </View>
+            ))}
+          </View>
+          
+          {selectedLevel && (
+            <View style={styles.selectedLevelInfo}>
+              <View style={styles.selectedLevelBadge}>
+                <Text style={styles.selectedLevelText}>
+                  선택된 레벨: <Text style={styles.selectedLevelHighlight}>{selectedLevel.name}</Text>
                 </Text>
-                <Text style={[
-                  styles.levelDescription,
-                  selectedLevel === level.key && styles.selectedLevelText
-                ]}>
-                  {level.description}
+                <Text style={styles.selectedLevelSubtext}>
+                  {getLevelText(selectedLevel.level)} 단계
                 </Text>
               </View>
-              {selectedLevel === level.key && (
-                <Ionicons name="checkmark-circle" size={24} color={COLORS.WHITE} />
-              )}
-            </TouchableOpacity>
-          ))}
+            </View>
+          )}
+        </Card>
+
+        {/* 완성 버튼 */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.completeButton,
+              (!nickname.trim() || !selectedLevel) &&
+                styles.completeButtonDisabled,
+            ]}
+            onPress={handleComplete}
+            disabled={!nickname.trim() || !selectedLevel}
+          >
+            <Text style={styles.completeButtonText}>프로필 완성</Text>
+            <Text style={styles.completeButtonSubtext}>클라이밍을 시작하세요! 🚀</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* 완료 버튼 */}
-        <TouchableOpacity style={styles.completeButton} onPress={handleProfileComplete}>
-          <Text style={styles.completeButtonText}>프로필 완성하기</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-};
+        {/* 성공 메시지 */}
+        {showSuccessMessage && (
+          <View style={styles.successMessage}>
+            <Text style={styles.successMessageText}>🎉 프로필 완성!</Text>
+            <Text style={styles.successMessageSubtext}>프로필이 성공적으로 완성되었습니다.</Text>
+            <Text style={styles.successMessageSubtext}>잠시 후 홈으로 이동합니다...</Text>
+          </View>
+        )}
+      </ScrollView>
+
+       {/* 날짜 선택 모달 */}
+       <Modal
+         visible={showDatePicker}
+         transparent={true}
+         animationType="slide"
+       >
+         <View style={styles.modalOverlay}>
+           <View style={styles.modalContent}>
+             <Text style={styles.modalTitle}>생년월일 선택</Text>
+             
+             {/* 간단한 날짜 선택 UI */}
+             <View style={styles.datePickerContainer}>
+               <View style={styles.dateInputRow}>
+                 <Text style={styles.dateLabel}>년도:</Text>
+                 <TextInput
+                   style={styles.dateInput}
+                   value={tempDate.getFullYear().toString()}
+                   onChangeText={(text) => {
+                     const year = parseInt(text) || 1990;
+                     setTempDate(new Date(year, tempDate.getMonth(), tempDate.getDate()));
+                   }}
+                   keyboardType="numeric"
+                   maxLength={4}
+                 />
+               </View>
+               
+               <View style={styles.dateInputRow}>
+                 <Text style={styles.dateLabel}>월:</Text>
+                 <TextInput
+                   style={styles.dateInput}
+                   value={(tempDate.getMonth() + 1).toString()}
+                   onChangeText={(text) => {
+                     const month = parseInt(text) - 1 || 0;
+                     setTempDate(new Date(tempDate.getFullYear(), month, tempDate.getDate()));
+                   }}
+                   keyboardType="numeric"
+                   maxLength={2}
+                 />
+               </View>
+               
+               <View style={styles.dateInputRow}>
+                 <Text style={styles.dateLabel}>일:</Text>
+                 <TextInput
+                   style={styles.dateInput}
+                   value={tempDate.getDate().toString()}
+                   onChangeText={(text) => {
+                     const day = parseInt(text) || 1;
+                     setTempDate(new Date(tempDate.getFullYear(), tempDate.getMonth(), day));
+                   }}
+                   keyboardType="numeric"
+                   maxLength={2}
+                 />
+               </View>
+             </View>
+             
+             <View style={styles.modalButtons}>
+               <TouchableOpacity style={styles.modalButton} onPress={handleDateCancel}>
+                 <Text style={styles.modalButtonText}>취소</Text>
+               </TouchableOpacity>
+               <TouchableOpacity style={[styles.modalButton, styles.modalButtonConfirm]} onPress={handleDateConfirm}>
+                 <Text style={[styles.modalButtonText, styles.modalButtonTextConfirm]}>확인</Text>
+               </TouchableOpacity>
+             </View>
+           </View>
+         </View>
+       </Modal>
+     </SafeAreaView>
+   );
+ };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND,
+  },
+  scrollContent: {
+    paddingBottom: SPACING.LG,
+    flexGrow: 1,
+    minHeight: '100%',
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
   },
-  content: {
-    flex: 1,
-    paddingHorizontal: SPACING.LG,
-    paddingVertical: SPACING.XL,
-  },
   header: {
     alignItems: 'center',
-    marginBottom: SPACING['2XL'],
+    marginBottom: SPACING.LG,
+    paddingHorizontal: SPACING.LG,
+    paddingVertical: SPACING.LG,
+  },
+  headerBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: COLORS.PRIMARY,
+    borderBottomLeftRadius: SPACING.RADIUS.XL,
+    borderBottomRightRadius: SPACING.RADIUS.XL,
+    zIndex: -1,
   },
   title: {
     fontSize: FONTS.SIZES['2XL'],
     fontWeight: '700',
-    color: COLORS.TEXT_PRIMARY,
+    color: COLORS.WHITE,
     marginTop: SPACING.LG,
     marginBottom: SPACING.SM,
   },
   subtitle: {
     fontSize: FONTS.SIZES.LG,
-    color: COLORS.TEXT_SECONDARY,
+    color: COLORS.WHITE,
     textAlign: 'center',
   },
-  levelSection: {
-    marginBottom: SPACING['2XL'],
+
+  cardContainer: {
+    marginBottom: SPACING.MD,
   },
-  sectionTitle: {
-    fontSize: FONTS.SIZES.LG,
-    fontWeight: '600',
-    color: COLORS.TEXT_PRIMARY,
-    marginBottom: SPACING.LG,
-    textAlign: 'center',
-  },
-  levelOption: {
+  cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: COLORS.SURFACE,
-    padding: SPACING.LG,
-    borderRadius: SPACING.RADIUS.MD,
-    marginBottom: SPACING.MD,
-    borderWidth: 2,
-    borderColor: COLORS.GRAY_200,
+    marginBottom: SPACING.XS,
   },
-  selectedLevel: {
-    backgroundColor: COLORS.PRIMARY,
-    borderColor: COLORS.PRIMARY,
-  },
-  levelContent: {
-    flex: 1,
-  },
-  levelLabel: {
+  cardIcon: {
     fontSize: FONTS.SIZES.LG,
+    marginRight: SPACING.XS,
+  },
+  cardTitle: {
+    fontSize: FONTS.SIZES.MD,
     fontWeight: '600',
     color: COLORS.TEXT_PRIMARY,
-    marginBottom: SPACING.XS,
   },
   levelDescription: {
     fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_SECONDARY,
+    marginTop: SPACING.XS,
+    marginBottom: SPACING.SM,
+  },
+  input: {
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: SPACING.RADIUS.SM,
+    paddingVertical: SPACING.XS,
+    paddingHorizontal: SPACING.SM,
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_PRIMARY,
+    borderWidth: 1,
+    borderColor: COLORS.GRAY_200,
+  },
+  helperText: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
+    marginTop: SPACING.XS,
+    marginBottom: SPACING.XS,
+  },
+  genderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: SPACING.XS,
+  },
+  genderButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.XS,
+    paddingHorizontal: SPACING.SM,
+    borderRadius: SPACING.RADIUS.SM,
+    borderWidth: 1,
+    borderColor: COLORS.GRAY_200,
+  },
+  genderButtonSelected: {
+    backgroundColor: COLORS.PRIMARY,
+    borderColor: COLORS.PRIMARY,
+  },
+  genderButtonText: {
+    fontSize: FONTS.SIZES.SM,
+    fontWeight: '600',
+    color: COLORS.TEXT_PRIMARY,
+    marginLeft: SPACING.XS,
+  },
+  genderButtonTextSelected: {
+    color: COLORS.WHITE,
+  },
+  genderIcon: {
+    fontSize: FONTS.SIZES.LG,
+  },
+  heightContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginTop: SPACING.XS,
+  },
+  heightInput: {
+    flex: 1,
+    marginRight: SPACING.XS,
+  },
+  heightUnit: {
+    fontSize: FONTS.SIZES.SM,
+    fontWeight: '600',
+    color: COLORS.TEXT_PRIMARY,
+  },
+  levelGrid: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: SPACING.XS,
+    paddingHorizontal: SPACING.SM,
+  },
+  levelButtonContainer: {
+    alignItems: 'center',
+    marginVertical: SPACING.XS,
+    marginHorizontal: 2,
+    minWidth: 32,
+  },
+  levelButton: {
+    width: 32,
+    height: 32,
+    borderRadius: SPACING.RADIUS.SM,
+    marginBottom: SPACING.XS,
+    borderWidth: 1,
+    borderColor: COLORS.GRAY_200,
+  },
+  levelButtonSelected: {
+    borderWidth: 3,
+    borderColor: COLORS.PRIMARY,
+  },
+  levelName: {
+    fontSize: FONTS.SIZES.XS,
+    color: COLORS.TEXT_PRIMARY,
+    marginTop: SPACING.XS,
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  levelIndicator: {
+    width: 20,
+    height: 3,
+    backgroundColor: COLORS.PRIMARY,
+    borderRadius: SPACING.RADIUS.SM,
+    marginTop: SPACING.XS,
+  },
+  selectedLevelInfo: {
+    marginTop: SPACING.SM,
+    paddingHorizontal: SPACING.LG,
+  },
+  selectedLevelBadge: {
+    backgroundColor: COLORS.PRIMARY,
+    borderRadius: SPACING.RADIUS.SM,
+    paddingVertical: SPACING.SM,
+    paddingHorizontal: SPACING.LG,
+    alignItems: 'center',
   },
   selectedLevelText: {
+    fontSize: FONTS.SIZES.SM,
     color: COLORS.WHITE,
+    marginBottom: SPACING.XS,
+  },
+  selectedLevelHighlight: {
+    fontWeight: '700',
+  },
+  selectedLevelSubtext: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.WHITE,
+  },
+  buttonContainer: {
+    paddingHorizontal: SPACING.SM,
+    paddingBottom: SPACING.LG,
+    marginTop: SPACING.SM,
   },
   completeButton: {
     backgroundColor: COLORS.PRIMARY,
-    paddingVertical: SPACING.LG,
-    paddingHorizontal: SPACING.XL,
-    borderRadius: SPACING.RADIUS.MD,
+    paddingVertical: SPACING.SM,
+    paddingHorizontal: SPACING.LG,
+    borderRadius: SPACING.RADIUS.SM,
     alignItems: 'center',
-    marginTop: 'auto',
+  },
+  completeButtonDisabled: {
+    backgroundColor: COLORS.GRAY_300,
+    opacity: 0.7,
   },
   completeButtonText: {
     color: COLORS.WHITE,
     fontSize: FONTS.SIZES.LG,
     fontWeight: '600',
   },
+  completeButtonSubtext: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.WHITE,
+    marginTop: SPACING.XS,
+  },
   errorText: {
     fontSize: FONTS.SIZES.LG,
     color: COLORS.ERROR,
     textAlign: 'center',
+  },
+  // 날짜 선택 버튼 스타일
+  dateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.SURFACE,
+    borderWidth: 1,
+    borderColor: COLORS.GRAY_200,
+    borderRadius: SPACING.RADIUS.SM,
+    paddingVertical: SPACING.XS,
+    paddingHorizontal: SPACING.SM,
+    marginTop: SPACING.XS,
+  },
+  dateButtonText: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_PRIMARY,
+    fontWeight: '500',
+  },
+  dateButtonPlaceholder: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
+  },
+  dateButtonIcon: {
+    fontSize: FONTS.SIZES.LG,
+  },
+  // 모달 스타일
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: COLORS.WHITE,
+    borderRadius: SPACING.RADIUS.SM,
+    padding: SPACING.SM,
+    width: '80%',
+    maxWidth: 350,
+  },
+  modalTitle: {
+    fontSize: FONTS.SIZES.MD,
+    fontWeight: '600',
+    color: COLORS.TEXT_PRIMARY,
+    textAlign: 'center',
+    marginBottom: SPACING.SM,
+  },
+  datePickerContainer: {
+    marginBottom: SPACING.SM,
+  },
+  dateInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.SM,
+  },
+  dateLabel: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_PRIMARY,
+    fontWeight: '500',
+    width: 50,
+  },
+  dateInput: {
+    flex: 1,
+    backgroundColor: COLORS.SURFACE,
+    borderWidth: 1,
+    borderColor: COLORS.GRAY_200,
+    borderRadius: SPACING.RADIUS.SM,
+    paddingVertical: SPACING.SM,
+    paddingHorizontal: SPACING.SM,
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_PRIMARY,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: SPACING.SM,
+    paddingHorizontal: SPACING.LG,
+    borderRadius: SPACING.RADIUS.SM,
+    borderWidth: 1,
+    borderColor: COLORS.GRAY_200,
+    marginHorizontal: SPACING.XS,
+  },
+  modalButtonConfirm: {
+    backgroundColor: COLORS.PRIMARY,
+    borderColor: COLORS.PRIMARY,
+  },
+  modalButtonText: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_PRIMARY,
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  modalButtonTextConfirm: {
+    color: COLORS.WHITE,
+  },
+  successMessage: {
+    backgroundColor: COLORS.SUCCESS,
+    paddingVertical: SPACING.MD,
+    paddingHorizontal: SPACING.LG,
+    borderRadius: SPACING.RADIUS.MD,
+    alignItems: 'center',
+    marginTop: SPACING.MD,
+    marginHorizontal: SPACING.MD,
+    shadowColor: COLORS.BLACK,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  successMessageText: {
+    fontSize: FONTS.SIZES.LG,
+    fontWeight: '700',
+    color: COLORS.WHITE,
+    marginBottom: SPACING.XS,
+  },
+  successMessageSubtext: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.WHITE,
+    textAlign: 'center',
+    marginBottom: SPACING.XS,
+    opacity: 0.9,
   },
 });
 

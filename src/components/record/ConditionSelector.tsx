@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS } from '@/constants';
+import { COLORS, SPACING, FONTS, TEXT_STYLES } from '@/constants';
 
 interface ConditionOption {
   value: number;
@@ -130,13 +130,13 @@ const styles = StyleSheet.create({
   },
   
   title: {
-    ...FONTS.H3,
+    ...TEXT_STYLES.H3,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
   
   subtitle: {
-    ...FONTS.BODY_MEDIUM,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.LG,
   },
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   
   optionLabel: {
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.TEXT_PRIMARY,
     fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     marginBottom: SPACING.XS,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   
   optionDescription: {
-    ...FONTS.BODY_SMALL,
+    ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.TEXT_SECONDARY,
   },
   
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   },
   
   selectedInfoLabel: {
-    ...FONTS.LABEL,
+    ...TEXT_STYLES.LABEL,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.SM,
   },
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   
   selectedInfoText: {
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.PRIMARY,
     fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },

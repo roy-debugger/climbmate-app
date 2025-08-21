@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS } from '@/constants';
+import { COLORS, SPACING, FONTS, TEXT_STYLES } from '@/constants';
 
 interface GradeOption {
   value: string;
@@ -124,13 +124,13 @@ const styles = StyleSheet.create({
   },
   
   title: {
-    ...FONTS.H3,
+    ...TEXT_STYLES.H3,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
   
   subtitle: {
-    ...FONTS.BODY_MEDIUM,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.LG,
   },
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   },
   
   gradeLabel: {
-    ...FONTS.BUTTON_LARGE,
+    ...TEXT_STYLES.BUTTON_LARGE,
     fontWeight: FONTS.WEIGHTS.BOLD,
   },
   
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   },
   
   legendTitle: {
-    ...FONTS.LABEL,
+    ...TEXT_STYLES.LABEL,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.SM,
   },
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   },
   
   legendText: {
-    ...FONTS.BODY_SMALL,
+    ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.TEXT_SECONDARY,
   },
   
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   
   selectedGradeLabel: {
-    ...FONTS.LABEL,
+    ...TEXT_STYLES.LABEL,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.SM,
   },
@@ -240,13 +240,13 @@ const styles = StyleSheet.create({
   },
   
   selectedGradeBadgeText: {
-    ...FONTS.BUTTON_MEDIUM,
+    ...TEXT_STYLES.BUTTON_MEDIUM,
     color: COLORS.WHITE,
     fontWeight: FONTS.WEIGHTS.BOLD,
   },
   
   selectedGradeDescription: {
-    ...FONTS.BODY_MEDIUM,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.PRIMARY,
     fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },

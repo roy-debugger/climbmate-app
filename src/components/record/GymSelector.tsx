@@ -9,7 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS } from '@/constants';
+import { COLORS, SPACING, FONTS, TEXT_STYLES } from '@/constants';
 
 // 서울 주요 암장 데이터
 const SEOUL_GYMS = [
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
   
   title: {
-    ...FONTS.H3,
+    ...TEXT_STYLES.H3,
     color: COLORS.TEXT_PRIMARY,
   },
   
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     marginLeft: SPACING.SM,
-    ...FONTS.BODY_MEDIUM,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_PRIMARY,
   },
   
@@ -234,13 +234,13 @@ const styles = StyleSheet.create({
   },
   
   gymName: {
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
   
   gymAddress: {
-    ...FONTS.BODY_SMALL,
+    ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.TEXT_SECONDARY,
   },
   
@@ -256,13 +256,13 @@ const styles = StyleSheet.create({
   },
   
   selectedGymLabel: {
-    ...FONTS.LABEL,
+    ...TEXT_STYLES.LABEL,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.XS,
   },
   
   selectedGymName: {
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.PRIMARY,
     fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },

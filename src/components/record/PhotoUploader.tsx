@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { COLORS, SPACING, FONTS } from '@/constants';
+import { COLORS, SPACING, FONTS, TEXT_STYLES } from '@/constants';
 
 interface PhotoUploaderProps {
   photos: string[];
@@ -176,13 +176,13 @@ const styles = StyleSheet.create({
   },
   
   title: {
-    ...FONTS.H3,
+    ...TEXT_STYLES.H3,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
   
   subtitle: {
-    ...FONTS.BODY_MEDIUM,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.LG,
   },
@@ -234,13 +234,13 @@ const styles = StyleSheet.create({
   },
   
   loadingText: {
-    ...FONTS.BODY_MEDIUM,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.PRIMARY,
     marginLeft: SPACING.SM,
   },
   
   addPhotoText: {
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.PRIMARY,
     fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     marginLeft: SPACING.SM,
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   },
   
   photoCountText: {
-    ...FONTS.LABEL,
+    ...TEXT_STYLES.LABEL,
     color: COLORS.TEXT_SECONDARY,
   },
   
@@ -265,14 +265,14 @@ const styles = StyleSheet.create({
   },
   
   tipsTitle: {
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.INFO,
     fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     marginBottom: SPACING.SM,
   },
   
   tipsText: {
-    ...FONTS.BODY_SMALL,
+    ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.TEXT_SECONDARY,
     lineHeight: FONTS.LINE_HEIGHTS.RELAXED * FONTS.SIZES.SM,
   },

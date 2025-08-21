@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, SIZES, FONTS } from '@/constants';
+import { COLORS, SIZES, FONTS, TEXT_STYLES } from '@/constants';
 
 const SettingsScreen = () => {
   const [notifications, setNotifications] = React.useState(true);
@@ -22,8 +22,8 @@ const SettingsScreen = () => {
             <Switch
               value={notifications}
               onValueChange={setNotifications}
-              trackColor={{ false: COLORS.lightGray, true: COLORS.primary }}
-              thumbColor={COLORS.white}
+              trackColor={{ false: COLORS.GRAY_200, true: COLORS.PRIMARY }}
+              thumbColor={COLORS.WHITE}
             />
           </View>
         </View>
@@ -35,8 +35,8 @@ const SettingsScreen = () => {
             <Switch
               value={darkMode}
               onValueChange={setDarkMode}
-              trackColor={{ false: COLORS.lightGray, true: COLORS.primary }}
-              thumbColor={COLORS.white}
+              trackColor={{ false: COLORS.GRAY_200, true: COLORS.PRIMARY }}
+              thumbColor={COLORS.WHITE}
             />
           </View>
         </View>
@@ -48,8 +48,8 @@ const SettingsScreen = () => {
             <Switch
               value={locationServices}
               onValueChange={setLocationServices}
-              trackColor={{ false: COLORS.lightGray, true: COLORS.primary }}
-              thumbColor={COLORS.white}
+              trackColor={{ false: COLORS.GRAY_200, true: COLORS.PRIMARY }}
+              thumbColor={COLORS.WHITE}
             />
           </View>
         </View>
@@ -89,50 +89,50 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.BACKGROUND,
   },
   scrollView: {
     flex: 1,
   },
   header: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.PRIMARY,
     padding: SIZES.padding,
     alignItems: 'center',
   },
   title: {
-    ...FONTS.h2,
-    color: COLORS.white,
+    ...TEXT_STYLES.H2,
+    color: COLORS.WHITE,
   },
   section: {
     marginBottom: SIZES.margin,
   },
   sectionTitle: {
-    ...FONTS.h4,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.H4,
+    color: COLORS.TEXT_PRIMARY,
     padding: SIZES.padding,
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: COLORS.GRAY_100,
     fontWeight: '600',
   },
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.SURFACE,
     padding: SIZES.padding,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.lightGray,
+    borderBottomColor: COLORS.GRAY_200,
   },
   settingText: {
-    ...FONTS.body3,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_PRIMARY,
   },
   settingValue: {
-    ...FONTS.body4,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_SMALL,
+    color: COLORS.TEXT_SECONDARY,
   },
   arrow: {
-    ...FONTS.h3,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.H3,
+    color: COLORS.TEXT_SECONDARY,
   },
 });
 

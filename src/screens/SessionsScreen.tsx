@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, SIZES, FONTS } from '@/constants';
+import { COLORS, SIZES, FONTS, TEXT_STYLES } from '@/constants';
 
 const SessionsScreen = () => {
   const sessions: any[] = []; // Will be populated from store
@@ -56,7 +56,7 @@ const SessionsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.BACKGROUND,
   },
   header: {
     flexDirection: 'row',
@@ -64,14 +64,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: SIZES.padding,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.lightGray,
+    borderBottomColor: COLORS.GRAY_200,
   },
   title: {
-    ...FONTS.h2,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.H2,
+    color: COLORS.TEXT_PRIMARY,
   },
   addButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.PRIMARY,
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addButtonText: {
-    color: COLORS.white,
+    color: COLORS.WHITE,
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -90,13 +90,13 @@ const styles = StyleSheet.create({
     padding: SIZES.padding,
   },
   emptyTitle: {
-    ...FONTS.h3,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.H3,
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: SIZES.base,
   },
   emptySubtitle: {
-    ...FONTS.body3,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
     marginBottom: SIZES.margin,
   },
@@ -104,12 +104,12 @@ const styles = StyleSheet.create({
     padding: SIZES.padding,
   },
   sessionItem: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.SURFACE,
     padding: SIZES.padding,
     borderRadius: SIZES.radius,
     marginBottom: SIZES.margin,
     borderLeftWidth: 4,
-    borderLeftColor: COLORS.primary,
+    borderLeftColor: COLORS.PRIMARY,
   },
   sessionHeader: {
     flexDirection: 'row',
@@ -117,17 +117,17 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.base,
   },
   sessionDate: {
-    ...FONTS.body3,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_PRIMARY,
     fontWeight: '600',
   },
   sessionDuration: {
-    ...FONTS.body4,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_SMALL,
+    color: COLORS.TEXT_SECONDARY,
   },
   gymName: {
-    ...FONTS.body3,
-    color: COLORS.primary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.PRIMARY,
     marginBottom: SIZES.base,
   },
   sessionStats: {
@@ -135,8 +135,8 @@ const styles = StyleSheet.create({
     gap: SIZES.margin,
   },
   statText: {
-    ...FONTS.body4,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_SMALL,
+    color: COLORS.TEXT_SECONDARY,
   },
 });
 

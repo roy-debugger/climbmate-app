@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { COLORS, SPACING, FONTS } from '@/constants';
+import { COLORS, SPACING, FONTS, SIZES, TEXT_STYLES } from '@/constants';
 import CustomButton from '@/components/common/CustomButton';
 import GymSelector from '@/components/record/GymSelector';
 import ConditionSelector from '@/components/record/ConditionSelector';
@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
   },
   
   headerTitle: {
-    ...FONTS.H3,
+    ...TEXT_STYLES.H3,
     color: COLORS.TEXT_PRIMARY,
   },
   
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
   },
   
   saveButtonText: {
-    ...FONTS.BUTTON_MEDIUM,
+    ...TEXT_STYLES.BUTTON_MEDIUM,
     color: COLORS.PRIMARY,
     fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },
@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
   },
   
   sectionTitle: {
-    ...FONTS.H4,
+    ...TEXT_STYLES.H4,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.MD,
   },
@@ -453,7 +453,7 @@ const styles = StyleSheet.create({
   
   dateButtonText: {
     flex: 1,
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.TEXT_PRIMARY,
     marginLeft: SPACING.SM,
   },
@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
   },
   
   selectedGymName: {
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
   
   placeholderText: {
     flex: 1,
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.GRAY_400,
   },
   
@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
   },
   
   timeValue: {
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.TEXT_PRIMARY,
     fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },
@@ -533,7 +533,7 @@ const styles = StyleSheet.create({
   },
   
   totalTimeValue: {
-    ...FONTS.BODY_LARGE,
+    ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.PRIMARY,
     fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },

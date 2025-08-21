@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, SIZES, FONTS } from '@/constants';
+import { COLORS, SIZES, FONTS, TEXT_STYLES } from '@/constants';
 
 const GymDetailScreen = () => {
   return (
@@ -69,13 +69,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.PRIMARY,
     padding: SIZES.padding,
     alignItems: 'center',
   },
   gymName: {
     ...FONTS.h1,
-    color: COLORS.white,
+    color: COLORS.WHITE,
     marginBottom: SIZES.margin,
     textAlign: 'center',
   },
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   rating: {
     ...FONTS.h3,
-    color: COLORS.white,
+    color: COLORS.WHITE,
     fontWeight: 'bold',
     marginRight: SIZES.base,
   },
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   totalRatings: {
     ...FONTS.body4,
-    color: COLORS.white,
+    color: COLORS.WHITE,
     opacity: 0.9,
   },
   section: {
@@ -109,8 +109,8 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.margin,
   },
   address: {
-    ...FONTS.body3,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
     lineHeight: 24,
   },
   hoursContainer: {
@@ -129,8 +129,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   time: {
-    ...FONTS.body3,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
   },
   facilitiesContainer: {
     flexDirection: 'row',
@@ -143,15 +143,15 @@ const styles = StyleSheet.create({
     paddingVertical: SIZES.base,
     borderRadius: SIZES.radius,
     ...FONTS.body4,
-    color: COLORS.white,
+    color: COLORS.WHITE,
   },
   contact: {
-    ...FONTS.body3,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
     marginBottom: SIZES.base,
   },
   actionButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.PRIMARY,
     margin: SIZES.margin,
     padding: SIZES.padding,
     borderRadius: SIZES.radius,
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: {
     ...FONTS.body2,
-    color: COLORS.white,
+    color: COLORS.WHITE,
     fontWeight: '600',
   },
 });

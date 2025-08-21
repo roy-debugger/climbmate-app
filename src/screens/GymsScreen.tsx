@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, SIZES, FONTS } from '@/constants';
+import { COLORS, SIZES, FONTS, TEXT_STYLES } from '@/constants';
 
 const GymsScreen = () => {
   const gyms: any[] = []; // Will be populated from store
@@ -56,7 +56,7 @@ const GymsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.BACKGROUND,
   },
   header: {
     flexDirection: 'row',
@@ -64,14 +64,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: SIZES.padding,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.lightGray,
+    borderBottomColor: COLORS.GRAY_200,
   },
   title: {
-    ...FONTS.h2,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.H2,
+    color: COLORS.TEXT_PRIMARY,
   },
   locationButton: {
-    backgroundColor: COLORS.secondary,
+    backgroundColor: COLORS.SECONDARY,
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -88,20 +88,20 @@ const styles = StyleSheet.create({
     padding: SIZES.padding,
   },
   emptyTitle: {
-    ...FONTS.h3,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.H3,
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: SIZES.base,
   },
   emptySubtitle: {
-    ...FONTS.body3,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
   },
   listContainer: {
     padding: SIZES.padding,
   },
   gymItem: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.SURFACE,
     padding: SIZES.padding,
     borderRadius: SIZES.radius,
     marginBottom: SIZES.margin,
@@ -113,8 +113,8 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.base,
   },
   gymName: {
-    ...FONTS.h4,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.H4,
+    color: COLORS.TEXT_PRIMARY,
     flex: 1,
   },
   ratingContainer: {
@@ -122,8 +122,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rating: {
-    ...FONTS.body3,
-    color: COLORS.primary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.PRIMARY,
     fontWeight: '600',
     marginRight: SIZES.base,
   },
@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   gymAddress: {
-    ...FONTS.body4,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_SMALL,
+    color: COLORS.TEXT_SECONDARY,
     marginBottom: SIZES.base,
   },
   gymFacilities: {
@@ -141,12 +141,12 @@ const styles = StyleSheet.create({
     gap: SIZES.base,
   },
   facilityTag: {
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: COLORS.GRAY_100,
     paddingHorizontal: SIZES.base,
     paddingVertical: 4,
     borderRadius: SIZES.radius / 2,
-    ...FONTS.body5,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.CAPTION,
+    color: COLORS.TEXT_SECONDARY,
   },
 });
 

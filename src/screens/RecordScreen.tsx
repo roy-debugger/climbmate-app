@@ -2,15 +2,21 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Calendar, DateData } from 'react-native-calendars';
+import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../constants/colors';
 import { SPACING } from '../constants/spacing';
 import { FONTS, TEXT_STYLES } from '../constants/typography';
 import { ClimbingDataService } from '../services/ClimbingDataService';
 import { ClimbingSession, MonthlyStats } from '../types/common';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../types/navigation';
 
 const { width } = Dimensions.get('window');
 
-const RecordScreen = () => {
+type RecordScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MainTabs'>;
+
+const RecordScreen: React.FC = () => {
+  const navigation = useNavigation<RecordScreenNavigationProp>();
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -84,6 +90,11 @@ const RecordScreen = () => {
     const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
     return `${month}월 ${day}일 (${dayOfWeek})`;
   };
+
+  // 새 세션 기록하기 버튼 핸들러
+  const handleAddSession = useCallback(() => {
+    navigation.navigate('AddRecord');
+  }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -220,7 +231,7 @@ const RecordScreen = () => {
 
         {/* Add Session Button */}
         <View style={styles.section}>
-          <TouchableOpacity style={styles.addButton}>
+          <TouchableOpacity style={styles.addButton} onPress={handleAddSession}>
             <Text style={styles.addButtonIcon}>➕</Text>
             <Text style={styles.addButtonText}>새 세션 기록하기</Text>
           </TouchableOpacity>

@@ -13,9 +13,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { COLORS } from '../constants/colors';
-import { SPACING } from '../constants/spacing';
-import { TEXT_STYLES } from '../constants/typography';
+import { COLORS, SPACING, FONTS, LAYOUT } from '../constants';
+import { globalStyles } from '../styles/globalStyles';
 import { GymSelector } from '../components/record/GymSelector';
 import { ConditionSelector } from '../components/record/ConditionSelector';
 import { GradeSelector } from '../components/record/GradeSelector';
@@ -35,7 +34,7 @@ interface ClimbingRecord {
   endTime: Date | null;
   totalTime: number | null; // 분 단위
   condition: number | null;
-  grade: string | null;
+  grade: string[]; // 배열로 변경하여 중복 선택 가능
   memo: string;
   photos: string[];
 }
@@ -49,14 +48,17 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
   navigation,
   route,
 }) => {
+  // route.params에서 선택된 날짜를 받아와서 초기 날짜로 설정
+  const selectedDate = route.params?.selectedDate ? new Date(route.params.selectedDate) : new Date();
+  
   const [record, setRecord] = useState<ClimbingRecord>({
-    date: new Date(),
+    date: selectedDate,
     gym: null,
     startTime: null,
     endTime: null,
     totalTime: null,
     condition: null,
-    grade: null,
+    grade: [], // 빈 배열로 초기화
     memo: '',
     photos: [],
   });
@@ -119,9 +121,18 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
     setRecord(prev => ({ ...prev, condition }));
   };
 
-  // 등급 선택
+  // 등급 선택 (중복 선택 가능)
   const handleGradeSelect = (grade: string) => {
-    setRecord(prev => ({ ...prev, grade }));
+    setRecord(prev => {
+      const currentGrades = prev.grade;
+      if (currentGrades.includes(grade)) {
+        // 이미 선택된 경우 제거
+        return { ...prev, grade: currentGrades.filter(g => g !== grade) };
+      } else {
+        // 새로운 선택 추가
+        return { ...prev, grade: [...currentGrades, grade] };
+      }
+    });
   };
 
   // 메모 변경
@@ -138,49 +149,91 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
   const handleSave = () => {
     // 유효성 검사
     if (!record.gym) {
-      Alert.alert('알림', '암장을 선택해주세요.');
+      if (typeof window !== 'undefined') {
+        // 웹 환경
+        window.alert('암장을 선택해주세요.');
+      } else {
+        // 모바일 환경
+        Alert.alert('알림', '암장을 선택해주세요.');
+      }
       return;
     }
 
     if (!record.condition) {
-      Alert.alert('알림', '컨디션을 선택해주세요.');
+      if (typeof window !== 'undefined') {
+        // 웹 환경
+        window.alert('컨디션을 선택해주세요.');
+      } else {
+        // 모바일 환경
+        Alert.alert('알림', '컨디션을 선택해주세요.');
+      }
       return;
     }
 
-    if (!record.grade) {
-      Alert.alert('알림', '등급을 선택해주세요.');
+    if (record.grade.length === 0) {
+      if (typeof window !== 'undefined') {
+        // 웹 환경
+        window.alert('등반 문제를 선택해주세요.');
+      } else {
+        // 모바일 환경
+        Alert.alert('알림', '등반 문제를 선택해주세요.');
+      }
       return;
     }
 
+    // 여기에 실제 데이터 저장 로직을 추가할 수 있습니다
+    // 예: API 호출, 로컬 스토리지 저장 등
+    
     // 임시로 console.log 출력
     console.log('저장된 기록:', record);
     
-    Alert.alert(
-      '저장 완료',
-      '운동 기록이 저장되었습니다.',
-      [
-        {
-          text: '확인',
-          onPress: () => navigation.goBack(),
-        },
-      ]
-    );
+    if (typeof window !== 'undefined') {
+      // 웹 환경
+      const confirmed = window.confirm('운동 기록이 저장되었습니다. 이전 화면으로 돌아가시겠습니까?');
+      if (confirmed) {
+        navigation.goBack();
+      }
+    } else {
+      // 모바일 환경
+      Alert.alert(
+        '저장 완료',
+        '운동 기록이 저장되었습니다.',
+        [
+          {
+            text: '확인',
+            onPress: () => {
+              // 이전 화면으로 돌아가기
+              navigation.goBack();
+            },
+          },
+        ]
+      );
+    }
   };
 
   // 취소
   const handleCancel = () => {
-    Alert.alert(
-      '작성 취소',
-      '작성 중인 내용이 사라집니다. 정말 취소하시겠습니까?',
-      [
-        { text: '계속 작성', style: 'cancel' },
-        {
-          text: '취소',
-          style: 'destructive',
-          onPress: () => navigation.goBack(),
-        },
-      ]
-    );
+    if (typeof window !== 'undefined') {
+      // 웹 환경
+      const confirmed = window.confirm('작성 중인 내용이 사라집니다. 정말 취소하시겠습니까?');
+      if (confirmed) {
+        navigation.goBack();
+      }
+    } else {
+      // 모바일 환경
+      Alert.alert(
+        '작성 취소',
+        '작성 중인 내용이 사라집니다. 정말 취소하시겠습니까?',
+        [
+          { text: '계속 작성', style: 'cancel' },
+          {
+            text: '취소',
+            style: 'destructive',
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
+    }
   };
 
   // 시간 포맷팅
@@ -203,83 +256,83 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={globalStyles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       {/* 헤더 */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
+      <View style={globalStyles.header}>
+        <TouchableOpacity onPress={handleCancel} style={globalStyles.headerButton}>
           <Ionicons name="close" size={24} color={COLORS.TEXT_PRIMARY} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>운동 기록 추가</Text>
-        <TouchableOpacity onPress={handleSave} style={styles.headerButton}>
+        <Text style={globalStyles.headerTitle}>운동 기록 추가</Text>
+        <TouchableOpacity onPress={handleSave} style={globalStyles.headerButton}>
           <Ionicons name="checkmark" size={24} color={COLORS.PRIMARY} />
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView style={globalStyles.content} showsVerticalScrollIndicator={false}>
         {/* 날짜 선택 */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>날짜</Text>
+        <View style={globalStyles.section}>
+          <Text style={globalStyles.sectionTitle}>날짜</Text>
           <TouchableOpacity
-            style={styles.dateButton}
+            style={globalStyles.dateButton}
             onPress={() => setShowDatePicker(true)}
           >
             <Ionicons name="calendar" size={20} color={COLORS.PRIMARY} />
-            <Text style={styles.dateText}>{formatDate(record.date)}</Text>
+            <Text style={globalStyles.dateText}>{formatDate(record.date)}</Text>
             <Ionicons name="chevron-down" size={20} color={COLORS.TEXT_SECONDARY} />
           </TouchableOpacity>
         </View>
 
         {/* 암장 선택 */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>암장</Text>
+        <View style={globalStyles.section}>
+          <Text style={globalStyles.sectionTitle}>암장</Text>
           <TouchableOpacity
-            style={styles.gymButton}
+            style={globalStyles.gymButton}
             onPress={() => setShowGymSelector(true)}
           >
             {record.gym ? (
-              <View style={styles.selectedGymInfo}>
-                <Text style={styles.selectedGymName}>{record.gym.name}</Text>
-                <Text style={styles.selectedGymAddress}>{record.gym.address}</Text>
+              <View style={globalStyles.selectedGymInfo}>
+                <Text style={globalStyles.selectedGymName}>{record.gym.name}</Text>
+                <Text style={globalStyles.selectedGymAddress}>{record.gym.address}</Text>
               </View>
             ) : (
-              <Text style={styles.placeholderText}>암장을 선택해주세요</Text>
+              <Text style={globalStyles.placeholderText}>암장을 선택해주세요</Text>
             )}
             <Ionicons name="chevron-forward" size={20} color={COLORS.TEXT_SECONDARY} />
           </TouchableOpacity>
         </View>
 
         {/* 운동 시간 */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>운동 시간</Text>
+        <View style={globalStyles.section}>
+          <Text style={globalStyles.sectionTitle}>운동 시간</Text>
           
           {/* 시간 입력 모드 선택 */}
-          <View style={styles.timeModeSelector}>
+          <View style={globalStyles.timeModeSelector}>
             <TouchableOpacity
               style={[
-                styles.timeModeButton,
-                timeInputMode === 'duration' && styles.selectedTimeModeButton,
+                globalStyles.timeModeButton,
+                timeInputMode === 'duration' && globalStyles.selectedTimeModeButton,
               ]}
               onPress={() => setTimeInputMode('duration')}
             >
               <Text style={[
-                styles.timeModeText,
-                timeInputMode === 'duration' && styles.selectedTimeModeText,
+                globalStyles.timeModeText,
+                timeInputMode === 'duration' && globalStyles.selectedTimeModeText,
               ]}>
                 총 시간
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
-                styles.timeModeButton,
-                timeInputMode === 'startEnd' && styles.selectedTimeModeButton,
+                globalStyles.timeModeButton,
+                timeInputMode === 'startEnd' && globalStyles.selectedTimeModeButton,
               ]}
               onPress={() => setTimeInputMode('startEnd')}
             >
               <Text style={[
-                styles.timeModeText,
-                timeInputMode === 'startEnd' && styles.selectedTimeModeText,
+                globalStyles.timeModeText,
+                timeInputMode === 'startEnd' && globalStyles.selectedTimeModeText,
               ]}>
                 시작-종료
               </Text>
@@ -287,35 +340,35 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
           </View>
 
           {timeInputMode === 'duration' ? (
-            <View style={styles.durationInput}>
+            <View style={globalStyles.durationInput}>
               <TextInput
-                style={styles.timeInput}
+                style={globalStyles.timeInput}
                 placeholder="운동 시간 (분)"
                 placeholderTextColor={COLORS.TEXT_DISABLED}
                 value={record.totalTime?.toString() || ''}
                 onChangeText={handleTotalTimeChange}
                 keyboardType="numeric"
               />
-              <Text style={styles.timeUnit}>분</Text>
+              <Text style={globalStyles.timeUnit}>분</Text>
             </View>
           ) : (
-            <View style={styles.startEndInput}>
+            <View style={globalStyles.startEndInput}>
               <TouchableOpacity
-                style={styles.timeButton}
+                style={globalStyles.timeButton}
                 onPress={() => setShowStartTimePicker(true)}
               >
-                <Text style={styles.timeButtonLabel}>시작 시간</Text>
-                <Text style={styles.timeButtonValue}>
+                <Text style={globalStyles.timeButtonLabel}>시작 시간</Text>
+                <Text style={globalStyles.timeButtonValue}>
                   {record.startTime ? formatTime(record.startTime) : '선택'}
                 </Text>
               </TouchableOpacity>
               
               <TouchableOpacity
-                style={styles.timeButton}
+                style={globalStyles.timeButton}
                 onPress={() => setShowEndTimePicker(true)}
               >
-                <Text style={styles.timeButtonLabel}>종료 시간</Text>
-                <Text style={styles.timeButtonValue}>
+                <Text style={globalStyles.timeButtonLabel}>종료 시간</Text>
+                <Text style={globalStyles.timeButtonValue}>
                   {record.endTime ? formatTime(record.endTime) : '선택'}
                 </Text>
               </TouchableOpacity>
@@ -324,8 +377,8 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
 
           {/* 총 시간 표시 */}
           {record.totalTime && (
-            <View style={styles.totalTimeDisplay}>
-              <Text style={styles.totalTimeText}>
+            <View style={globalStyles.totalTimeDisplay}>
+              <Text style={globalStyles.totalTimeText}>
                 총 운동 시간: {record.totalTime}분
               </Text>
             </View>
@@ -345,10 +398,10 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
         />
 
         {/* 메모 입력 */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>메모 (선택사항)</Text>
+        <View style={globalStyles.section}>
+          <Text style={globalStyles.sectionTitle}>메모 (선택사항)</Text>
           <TextInput
-            style={styles.memoInput}
+            style={globalStyles.memoInput}
             placeholder="오늘의 운동에 대한 메모를 작성해보세요..."
             placeholderTextColor={COLORS.TEXT_DISABLED}
             value={record.memo}
@@ -385,6 +438,7 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
           mode="time"
           display="default"
           onChange={handleStartTimeChange}
+          is24Hour={true}
         />
       )}
 
@@ -395,6 +449,7 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
           mode="time"
           display="default"
           onChange={handleEndTimeChange}
+          is24Hour={true}
         />
       )}
 
@@ -414,168 +469,3 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.BACKGROUND,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: SPACING.LAYOUT.SCREEN_PADDING,
-    borderBottomWidth: SPACING.BORDER.THIN,
-    borderBottomColor: COLORS.GRAY_200,
-    backgroundColor: COLORS.SURFACE,
-  },
-  headerTitle: {
-    ...TEXT_STYLES.H3,
-    color: COLORS.TEXT_PRIMARY,
-  },
-  headerButton: {
-    padding: SPACING.XS,
-  },
-  content: {
-    flex: 1,
-  },
-  section: {
-    padding: SPACING.LAYOUT.SCREEN_PADDING,
-    borderBottomWidth: SPACING.BORDER.THIN,
-    borderBottomColor: COLORS.GRAY_100,
-  },
-  sectionTitle: {
-    ...TEXT_STYLES.H5,
-    color: COLORS.TEXT_PRIMARY,
-    marginBottom: SPACING.MD,
-  },
-  dateButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: SPACING.MD,
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: SPACING.RADIUS.MD,
-    borderWidth: SPACING.BORDER.THIN,
-    borderColor: COLORS.GRAY_200,
-    ...SPACING.SHADOW.SM,
-  },
-  dateText: {
-    flex: 1,
-    ...TEXT_STYLES.BODY_LARGE,
-    color: COLORS.TEXT_PRIMARY,
-    marginLeft: SPACING.SM,
-  },
-  gymButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: SPACING.MD,
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: SPACING.RADIUS.MD,
-    borderWidth: SPACING.BORDER.THIN,
-    borderColor: COLORS.GRAY_200,
-    ...SPACING.SHADOW.SM,
-  },
-  selectedGymInfo: {
-    flex: 1,
-  },
-  selectedGymName: {
-    ...TEXT_STYLES.BODY_LARGE,
-    color: COLORS.TEXT_PRIMARY,
-    marginBottom: SPACING.XS,
-  },
-  selectedGymAddress: {
-    ...TEXT_STYLES.BODY_SMALL,
-    color: COLORS.TEXT_SECONDARY,
-  },
-  placeholderText: {
-    flex: 1,
-    ...TEXT_STYLES.BODY_LARGE,
-    color: COLORS.TEXT_DISABLED,
-  },
-  timeModeSelector: {
-    flexDirection: 'row',
-    marginBottom: SPACING.MD,
-    gap: SPACING.SM,
-  },
-  timeModeButton: {
-    flex: 1,
-    padding: SPACING.SM,
-    backgroundColor: COLORS.GRAY_100,
-    borderRadius: SPACING.RADIUS.SM,
-    alignItems: 'center',
-  },
-  selectedTimeModeButton: {
-    backgroundColor: COLORS.PRIMARY,
-  },
-  timeModeText: {
-    ...TEXT_STYLES.BODY_MEDIUM,
-    color: COLORS.TEXT_SECONDARY,
-  },
-  selectedTimeModeText: {
-    color: COLORS.WHITE,
-    fontWeight: '600',
-  },
-  durationInput: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.SM,
-  },
-  timeInput: {
-    flex: 1,
-    padding: SPACING.MD,
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: SPACING.RADIUS.MD,
-    borderWidth: SPACING.BORDER.THIN,
-    borderColor: COLORS.GRAY_200,
-    ...TEXT_STYLES.BODY_LARGE,
-    color: COLORS.TEXT_PRIMARY,
-  },
-  timeUnit: {
-    ...TEXT_STYLES.BODY_LARGE,
-    color: COLORS.TEXT_SECONDARY,
-  },
-  startEndInput: {
-    gap: SPACING.SM,
-  },
-  timeButton: {
-    padding: SPACING.MD,
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: SPACING.RADIUS.MD,
-    borderWidth: SPACING.BORDER.THIN,
-    borderColor: COLORS.GRAY_200,
-    ...SPACING.SHADOW.SM,
-  },
-  timeButtonLabel: {
-    ...TEXT_STYLES.LABEL,
-    color: COLORS.TEXT_SECONDARY,
-    marginBottom: SPACING.XS,
-  },
-  timeButtonValue: {
-    ...TEXT_STYLES.BODY_LARGE,
-    color: COLORS.TEXT_PRIMARY,
-    fontWeight: '600',
-  },
-  totalTimeDisplay: {
-    marginTop: SPACING.MD,
-    padding: SPACING.MD,
-    backgroundColor: COLORS.SUCCESS_LIGHT + '10',
-    borderRadius: SPACING.RADIUS.MD,
-    borderLeftWidth: 4,
-    borderLeftColor: COLORS.SUCCESS,
-  },
-  totalTimeText: {
-    ...TEXT_STYLES.BODY_MEDIUM,
-    color: COLORS.SUCCESS,
-    fontWeight: '600',
-  },
-  memoInput: {
-    padding: SPACING.MD,
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: SPACING.RADIUS.MD,
-    borderWidth: SPACING.BORDER.THIN,
-    borderColor: COLORS.GRAY_200,
-    ...TEXT_STYLES.BODY_MEDIUM,
-    color: COLORS.TEXT_PRIMARY,
-    minHeight: 100,
-    ...SPACING.SHADOW.SM,
-  },
-});

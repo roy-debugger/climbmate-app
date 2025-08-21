@@ -123,18 +123,203 @@ export const globalStyles = StyleSheet.create({
   
   // 헤더 관련
   header: {
-    height: LAYOUT.HEADER.HEIGHT.MEDIUM,
-    backgroundColor: COLORS.PRIMARY,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: LAYOUT.HEADER.PADDING,
-    paddingVertical: LAYOUT.HEADER.PADDING,
+    padding: SPACING.LAYOUT.SCREEN_PADDING,
+    borderBottomWidth: SPACING.BORDER.THIN,
+    borderBottomColor: COLORS.GRAY_200,
+    backgroundColor: COLORS.SURFACE,
   },
   
   headerTitle: {
     fontSize: FONTS.SIZES.LG,
-    fontWeight: FONTS.WEIGHTS.BOLD,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
+    color: COLORS.TEXT_PRIMARY,
+  },
+
+  headerButton: {
+    padding: SPACING.XS,
+  },
+
+  // 콘텐츠 관련
+  content: {
+    flex: 1,
+    flexGrow: 1,
+    paddingBottom: SPACING.LG,
+    backgroundColor: COLORS.BACKGROUND,
+  },
+
+  // 섹션 관련
+  section: {
+    padding: SPACING.LAYOUT.SCREEN_PADDING,
+    borderBottomWidth: SPACING.BORDER.THIN,
+    borderBottomColor: COLORS.GRAY_100,
+  },
+
+  sectionTitle: {
+    fontSize: FONTS.SIZES.MD,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
+    color: COLORS.TEXT_PRIMARY,
+    marginBottom: SPACING.MD,
+  },
+
+  // 날짜 버튼 관련
+  dateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.MD,
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: SPACING.RADIUS.MD,
+    borderWidth: SPACING.BORDER.THIN,
+    borderColor: COLORS.GRAY_200,
+    ...LAYOUT.SHADOW.SMALL,
+  },
+
+  dateText: {
+    flex: 1,
+    fontSize: FONTS.SIZES.BASE,
+    color: COLORS.TEXT_PRIMARY,
+    marginLeft: SPACING.SM,
+  },
+
+  // 암장 버튼 관련
+  gymButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.MD,
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: SPACING.RADIUS.MD,
+    borderWidth: SPACING.BORDER.THIN,
+    borderColor: COLORS.GRAY_200,
+    ...LAYOUT.SHADOW.SMALL,
+  },
+
+  selectedGymInfo: {
+    flex: 1,
+  },
+
+  selectedGymName: {
+    fontSize: FONTS.SIZES.BASE,
+    color: COLORS.TEXT_PRIMARY,
+    marginBottom: SPACING.XS,
+  },
+
+  selectedGymAddress: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
+  },
+
+  placeholderText: {
+    flex: 1,
+    fontSize: FONTS.SIZES.BASE,
+    color: COLORS.TEXT_DISABLED,
+  },
+
+  // 시간 모드 선택 관련
+  timeModeSelector: {
+    flexDirection: 'row',
+    marginBottom: SPACING.MD,
+    gap: SPACING.SM,
+  },
+
+  timeModeButton: {
+    flex: 1,
+    padding: SPACING.SM,
+    backgroundColor: COLORS.GRAY_100,
+    borderRadius: SPACING.RADIUS.SM,
+    alignItems: 'center',
+  },
+
+  selectedTimeModeButton: {
+    backgroundColor: COLORS.PRIMARY,
+  },
+
+  timeModeText: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
+  },
+
+  selectedTimeModeText: {
     color: COLORS.WHITE,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
+  },
+
+  // 시간 입력 관련
+  durationInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.SM,
+  },
+
+  timeInput: {
+    flex: 1,
+    padding: SPACING.MD,
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: SPACING.RADIUS.MD,
+    borderWidth: SPACING.BORDER.THIN,
+    borderColor: COLORS.GRAY_200,
+    fontSize: FONTS.SIZES.BASE,
+    color: COLORS.TEXT_PRIMARY,
+  },
+
+  timeUnit: {
+    fontSize: FONTS.SIZES.BASE,
+    color: COLORS.TEXT_SECONDARY,
+  },
+
+  startEndInput: {
+    gap: SPACING.SM,
+  },
+
+  timeButton: {
+    padding: SPACING.MD,
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: SPACING.RADIUS.MD,
+    borderWidth: SPACING.BORDER.THIN,
+    borderColor: COLORS.GRAY_200,
+    ...LAYOUT.SHADOW.SMALL,
+  },
+
+  timeButtonLabel: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
+    marginBottom: SPACING.XS,
+  },
+
+  timeButtonValue: {
+    fontSize: FONTS.SIZES.BASE,
+    color: COLORS.TEXT_PRIMARY,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
+  },
+
+  // 총 시간 표시 관련
+  totalTimeDisplay: {
+    marginTop: SPACING.MD,
+    padding: SPACING.MD,
+    backgroundColor: COLORS.SUCCESS_LIGHT + '10',
+    borderRadius: SPACING.RADIUS.MD,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.SUCCESS,
+  },
+
+  totalTimeText: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.SUCCESS,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
+  },
+
+  // 메모 입력 관련
+  memoInput: {
+    padding: SPACING.MD,
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: SPACING.RADIUS.MD,
+    borderWidth: SPACING.BORDER.THIN,
+    borderColor: COLORS.GRAY_200,
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_PRIMARY,
+    minHeight: 100,
+    ...LAYOUT.SHADOW.SMALL,
   },
   
   // 모달 관련

@@ -5,6 +5,7 @@ import { RootStackParamList } from '../types/navigation';
 import BottomTabNavigator from './BottomTabNavigator';
 import ComponentTestScreen from '../screens/ComponentTestScreen';
 import StorageTestScreen from '../screens/StorageTestScreen';
+import { AddRecordScreen } from '../screens/AddRecordScreen';
 import WelcomeScreen from '../auth/WelcomeScreen';
 import ProfileCompleteScreen from '../auth/ProfileCompleteScreen';
 import useAuthStore from '../store/authStore';
@@ -77,6 +78,14 @@ const RootNavigator: React.FC = () => {
               },
             }}
           />
+          <Stack.Screen
+            name="AddRecord"
+            component={AddRecordScreen}
+            options={{
+              title: '운동 기록 추가',
+              headerShown: false,
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -134,6 +143,14 @@ const RootNavigator: React.FC = () => {
               headerTitleStyle: {
                 fontWeight: '600',
               },
+            }}
+          />
+          <Stack.Screen
+            name="AddRecord"
+            component={AddRecordScreen}
+            options={{
+              title: '운동 기록 추가',
+              headerShown: false,
             }}
           />
         </Stack.Navigator>

@@ -19,6 +19,8 @@ export type RootStackParamList = {
   // 온보딩 관련 화면들
   Splash: undefined;
   Onboarding: undefined;
+  // 기록 관련 화면들
+  AddRecord: undefined; // 새 세션 기록 추가 화면
   // 향후 추가될 스크린들
   // SessionDetail: { sessionId: string };
   // GymDetail: { gymId: string };

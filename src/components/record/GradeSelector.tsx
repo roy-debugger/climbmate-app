@@ -4,42 +4,41 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../../constants/colors';
-import { SPACING } from '../../constants/spacing';
-import { TEXT_STYLES } from '../../constants/typography';
+import { COLORS, SPACING, FONTS, LAYOUT } from '../../constants';
+import { globalStyles } from '../../styles/globalStyles';
 
-interface Grade {
-  value: string;
-  label: string;
+interface ClimbingLevel {
   color: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  name: string;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  gradient: string[];
 }
 
-const GRADES: Grade[] = [
-  { value: 'V0', label: 'V0', color: COLORS.SUCCESS, difficulty: 'beginner' },
-  { value: 'V1', label: 'V1', color: COLORS.SUCCESS, difficulty: 'beginner' },
-  { value: 'V2', label: 'V2', color: COLORS.SUCCESS, difficulty: 'beginner' },
-  { value: 'V3', label: 'V3', color: COLORS.INFO, difficulty: 'intermediate' },
-  { value: 'V4', label: 'V4', color: COLORS.INFO, difficulty: 'intermediate' },
-  { value: 'V5', label: 'V5', color: COLORS.INFO, difficulty: 'intermediate' },
-  { value: 'V6', label: 'V6', color: COLORS.WARNING, difficulty: 'advanced' },
-  { value: 'V7', label: 'V7', color: COLORS.WARNING, difficulty: 'advanced' },
-  { value: 'V8', label: 'V8', color: COLORS.ERROR, difficulty: 'expert' },
-  { value: 'V9', label: 'V9', color: COLORS.ERROR, difficulty: 'expert' },
-  { value: 'V10', label: 'V10', color: COLORS.ERROR, difficulty: 'expert' },
+// ProfileCompleteScreen과 동일한 CLIMBING_LEVELS 사용
+const CLIMBING_LEVELS: ClimbingLevel[] = [
+  { color: '#FFFFFF', name: '흰색', level: 'beginner', gradient: ['#FFFFFF', '#F5F5F5'] },
+  { color: '#FFD93D', name: '노랑', level: 'beginner', gradient: ['#FFD93D', '#FFE66D'] },
+  { color: '#FFA07A', name: '주황', level: 'beginner', gradient: ['#FFA07A', '#FFB88C'] },
+  { color: '#6BCF7F', name: '초록', level: 'beginner', gradient: ['#6BCF7F', '#8ED6A3'] },
+  { color: '#4ECDC4', name: '파랑', level: 'intermediate', gradient: ['#4ECDC4', '#7DDCD3'] },
+  { color: '#FF6B6B', name: '빨강', level: 'intermediate', gradient: ['#FF6B6B', '#FF8E8E'] },
+  { color: '#A78BFA', name: '보라', level: 'intermediate', gradient: ['#A78BFA', '#C4A8FF'] },
+  { color: '#9E9E9E', name: '회색', level: 'advanced', gradient: ['#9E9E9E', '#BDBDBD'] },
+  { color: '#8D6E63', name: '갈색', level: 'advanced', gradient: ['#8D6E63', '#A1887F'] },
+  { color: '#424242', name: '검정', level: 'advanced', gradient: ['#424242', '#616161'] },
 ];
 
 const DIFFICULTY_LABELS = {
   beginner: '초급',
   intermediate: '중급',
   advanced: '고급',
-  expert: '전문가',
 };
 
 interface GradeSelectorProps {
-  selectedGrade: string | null;
+  selectedGrade: string[]; // 배열로 변경하여 중복 선택 가능
   onGradeSelect: (grade: string) => void;
 }
 
@@ -47,60 +46,68 @@ export const GradeSelector: React.FC<GradeSelectorProps> = ({
   selectedGrade,
   onGradeSelect,
 }) => {
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
+  const getDifficultyColor = (level: string) => {
+    switch (level) {
       case 'beginner': return COLORS.SUCCESS;
       case 'intermediate': return COLORS.INFO;
       case 'advanced': return COLORS.WARNING;
-      case 'expert': return COLORS.ERROR;
       default: return COLORS.TEXT_SECONDARY;
     }
   };
 
+  const handleGradeSelect = (gradeName: string) => {
+    onGradeSelect(gradeName);
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>오늘의 최고 등급</Text>
-      <Text style={styles.subtitle}>클라이밍한 등급 중 가장 높은 등급을 선택해주세요</Text>
+      <Text style={styles.title}>등반 문제</Text>
+      <Text style={styles.subtitle}>오늘 클라이밍한 문제들을 선택해주세요 (중복 선택 가능)</Text>
       
       {/* 등급 그리드 */}
-      <View style={styles.gradeGrid}>
-        {GRADES.map((grade) => (
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.gradeScrollContainer}
+      >
+        {CLIMBING_LEVELS.map((level) => (
           <TouchableOpacity
-            key={grade.value}
+            key={level.name}
             style={[
               styles.gradeButton,
-              { borderColor: grade.color },
-              selectedGrade === grade.value && styles.selectedGradeButton,
+              { borderColor: level.color },
+              selectedGrade.includes(level.name) && styles.selectedGradeButton,
             ]}
-            onPress={() => onGradeSelect(grade.value)}
+            onPress={() => handleGradeSelect(level.name)}
             activeOpacity={0.7}
           >
+            <View style={[styles.gradeColorIndicator, { backgroundColor: level.color }]} />
             <Text style={[
               styles.gradeLabel,
-              { color: grade.color },
-              selectedGrade === grade.value && styles.selectedGradeText,
+              { color: level.color },
+              selectedGrade.includes(level.name) && styles.selectedGradeText,
             ]}>
-              {grade.label}
+              {level.name}
             </Text>
             
-            {selectedGrade === grade.value && (
-              <View style={[styles.checkmark, { backgroundColor: grade.color }]}>
-                <Ionicons name="checkmark" size={16} color={COLORS.WHITE} />
+            {selectedGrade.includes(level.name) && (
+              <View style={[styles.checkmark, { backgroundColor: level.color }]}>
+                <Ionicons name="checkmark" size={12} color={COLORS.WHITE} />
               </View>
             )}
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
       
       {/* 난이도별 구분 */}
       <View style={styles.difficultyLegend}>
         <Text style={styles.legendTitle}>난이도 구분</Text>
         <View style={styles.legendItems}>
           {Object.entries(DIFFICULTY_LABELS).map(([key, label]) => {
-            const grade = GRADES.find(g => g.difficulty === key);
+            const level = CLIMBING_LEVELS.find(l => l.level === key);
             return (
               <View key={key} style={styles.legendItem}>
-                <View style={[styles.legendDot, { backgroundColor: grade?.color }]} />
+                <View style={[styles.legendColor, { backgroundColor: getDifficultyColor(key) }]} />
                 <Text style={styles.legendText}>{label}</Text>
               </View>
             );
@@ -109,16 +116,13 @@ export const GradeSelector: React.FC<GradeSelectorProps> = ({
       </View>
       
       {/* 선택된 등급 정보 */}
-      {selectedGrade && (
+      {selectedGrade.length > 0 && (
         <View style={styles.selectedGradeInfo}>
           <Text style={styles.selectedGradeTitle}>
-            선택된 등급: {selectedGrade}
+            선택된 문제: {selectedGrade.join(', ')}
           </Text>
           <Text style={styles.selectedGradeDescription}>
-            {GRADES.find(g => g.value === selectedGrade)?.difficulty === 'beginner' && '초급자도 도전할 수 있는 등급입니다!'}
-            {GRADES.find(g => g.value === selectedGrade)?.difficulty === 'intermediate' && '중급자 수준의 등급입니다.'}
-            {GRADES.find(g => g.value === selectedGrade)?.difficulty === 'advanced' && '고급자 수준의 등급입니다.'}
-            {GRADES.find(g => g.value === selectedGrade)?.difficulty === 'expert' && '전문가 수준의 등급입니다!'}
+            총 {selectedGrade.length}개의 문제가 선택되었습니다
           </Text>
         </View>
       )}
@@ -131,28 +135,27 @@ const styles = StyleSheet.create({
     padding: SPACING.LAYOUT.SCREEN_PADDING,
   },
   title: {
-    ...TEXT_STYLES.H4,
+    fontSize: FONTS.SIZES.LG,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
   subtitle: {
-    ...TEXT_STYLES.BODY_MEDIUM,
+    fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.LG,
   },
-  gradeGrid: {
+  gradeScrollContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
     gap: SPACING.SM,
     marginBottom: SPACING.LG,
   },
   gradeButton: {
-    width: '30%',
-    aspectRatio: 1,
+    width: 80, // 카드 크기 줄임
+    height: 80, // 정사각형으로 만들기
     backgroundColor: COLORS.SURFACE,
     borderRadius: SPACING.RADIUS.MD,
-    borderWidth: SPACING.BORDER.THICK,
+    borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
     ...SPACING.SHADOW.MD,
   },
   gradeLabel: {
-    ...TEXT_STYLES.H3,
+    fontSize: FONTS.SIZES.SM, // 폰트 크기 줄임
     fontWeight: '700',
   },
   selectedGradeText: {
@@ -173,12 +176,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: SPACING.XS,
     right: SPACING.XS,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 16, // 체크마크 크기 줄임
+    height: 16,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     ...SPACING.SHADOW.SM,
+  },
+  gradeColorIndicator: {
+    width: '80%',
+    height: '40%',
+    borderRadius: SPACING.RADIUS.SM,
+    marginBottom: SPACING.XS,
   },
   difficultyLegend: {
     backgroundColor: COLORS.GRAY_100,
@@ -187,7 +196,8 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.LG,
   },
   legendTitle: {
-    ...TEXT_STYLES.LABEL,
+    fontSize: FONTS.SIZES.SM,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.SM,
   },
@@ -201,13 +211,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: SPACING.XS,
   },
-  legendDot: {
+  legendColor: {
     width: 12,
     height: 12,
     borderRadius: 6,
   },
   legendText: {
-    ...TEXT_STYLES.BODY_SMALL,
+    fontSize: FONTS.SIZES.XS,
     color: COLORS.TEXT_SECONDARY,
   },
   selectedGradeInfo: {
@@ -218,13 +228,13 @@ const styles = StyleSheet.create({
     borderLeftColor: COLORS.PRIMARY,
   },
   selectedGradeTitle: {
-    ...TEXT_STYLES.BODY_LARGE,
+    fontSize: FONTS.SIZES.BASE,
     color: COLORS.PRIMARY,
     fontWeight: '600',
     marginBottom: SPACING.XS,
   },
   selectedGradeDescription: {
-    ...TEXT_STYLES.BODY_MEDIUM,
+    fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_SECONDARY,
   },
 });

@@ -4,11 +4,11 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../../constants/colors';
-import { SPACING } from '../../constants/spacing';
-import { TEXT_STYLES } from '../../constants/typography';
+import { COLORS, SPACING, FONTS, LAYOUT } from '../../constants';
+import { globalStyles } from '../../styles/globalStyles';
 
 interface Condition {
   level: number;
@@ -70,7 +70,11 @@ export const ConditionSelector: React.FC<ConditionSelectorProps> = ({
       <Text style={styles.title}>오늘의 컨디션</Text>
       <Text style={styles.subtitle}>운동할 때 컨디션을 선택해주세요</Text>
       
-      <View style={styles.conditionGrid}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.conditionScrollContainer}
+      >
         {CONDITIONS.map((condition) => (
           <TouchableOpacity
             key={condition.level}
@@ -98,16 +102,13 @@ export const ConditionSelector: React.FC<ConditionSelectorProps> = ({
             </View>
             
             {selectedCondition === condition.level && (
-              <View style={[
-                styles.checkmark,
-                { backgroundColor: condition.color }
-              ]}>
+              <View style={[styles.checkmark, { backgroundColor: condition.color }]}>
                 <Ionicons name="checkmark" size={16} color={COLORS.WHITE} />
               </View>
             )}
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
       
       {selectedCondition && (
         <View style={styles.selectedConditionInfo}>
@@ -128,32 +129,30 @@ const styles = StyleSheet.create({
     padding: SPACING.LAYOUT.SCREEN_PADDING,
   },
   title: {
-    ...TEXT_STYLES.H4,
+    fontSize: FONTS.SIZES.LG,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
   subtitle: {
-    ...TEXT_STYLES.BODY_MEDIUM,
+    fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.LG,
   },
-  conditionGrid: {
+  conditionScrollContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
     gap: SPACING.SM,
     marginBottom: SPACING.LG,
   },
   conditionItem: {
-    width: '48%',
+    width: 120, // 고정 너비로 설정
     backgroundColor: COLORS.SURFACE,
     borderRadius: SPACING.RADIUS.MD,
     padding: SPACING.MD,
-    borderWidth: SPACING.BORDER.THIN,
+    borderWidth: 2,
     borderColor: COLORS.GRAY_200,
-    ...SPACING.SHADOW.SM,
+    alignItems: 'center',
     position: 'relative',
-    minHeight: 100,
   },
   selectedConditionItem: {
     borderColor: COLORS.PRIMARY,
@@ -169,17 +168,17 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.SM,
   },
   conditionLabel: {
-    ...TEXT_STYLES.BODY_MEDIUM,
+    fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_PRIMARY,
     fontWeight: '600',
     textAlign: 'center',
-    marginBottom: SPACING.XS,
+    marginTop: SPACING.XS,
   },
   conditionDescription: {
-    ...TEXT_STYLES.BODY_SMALL,
+    fontSize: FONTS.SIZES.XS,
     color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
-    lineHeight: 16,
+    marginTop: SPACING.XS,
   },
   selectedConditionText: {
     color: COLORS.PRIMARY,
@@ -203,13 +202,13 @@ const styles = StyleSheet.create({
     borderLeftColor: COLORS.PRIMARY,
   },
   selectedConditionTitle: {
-    ...TEXT_STYLES.BODY_LARGE,
+    fontSize: FONTS.SIZES.BASE,
     color: COLORS.PRIMARY,
     fontWeight: '600',
     marginBottom: SPACING.XS,
   },
   selectedConditionDescription: {
-    ...TEXT_STYLES.BODY_MEDIUM,
+    fontSize: FONTS.SIZES.SM,
     color: COLORS.TEXT_SECONDARY,
   },
 });

@@ -28,6 +28,13 @@ interface Gym {
   isFavorite: boolean;
 }
 
+interface ClimbingRoute {
+  id: string;
+  grade: string;
+  completedAttempts: number;
+  attemptedAttempts: number;
+}
+
 interface ClimbingRecord {
   date: Date;
   gym: Gym | null;
@@ -35,7 +42,7 @@ interface ClimbingRecord {
   endTime: Date | null;
   totalTime: number | null; // 분 단위
   condition: number | null;
-  grade: string[]; // 배열로 변경하여 중복 선택 가능
+  routes: ClimbingRoute[]; // 등반 루트 리스트로 변경
   memo: string;
   photos: string[];
 }
@@ -59,7 +66,7 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
     endTime: null,
     totalTime: null,
     condition: null,
-    grade: [], // 빈 배열로 초기화
+    routes: [], // 빈 배열로 초기화
     memo: '',
     photos: [],
   });
@@ -125,15 +132,74 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
   // 등급 선택 (중복 선택 가능)
   const handleGradeSelect = (grade: string) => {
     setRecord(prev => {
-      const currentGrades = prev.grade;
-      if (currentGrades.includes(grade)) {
-        // 이미 선택된 경우 제거
-        return { ...prev, grade: currentGrades.filter(g => g !== grade) };
+      const existingRoute = prev.routes.find(route => route.grade === grade);
+      
+      if (existingRoute) {
+        // 이미 존재하는 경우 완등 횟수 증가
+        return {
+          ...prev,
+          routes: prev.routes.map(route =>
+            route.grade === grade
+              ? { ...route, completedAttempts: route.completedAttempts + 1 }
+              : route
+          )
+        };
       } else {
-        // 새로운 선택 추가
-        return { ...prev, grade: [...currentGrades, grade] };
+        // 새로운 루트 추가 (완등 1회, 시도 0회로 시작)
+        const newRoute: ClimbingRoute = {
+          id: `${grade}-${Date.now()}`,
+          grade,
+          completedAttempts: 1,
+          attemptedAttempts: 0
+        };
+        return {
+          ...prev,
+          routes: [...prev.routes, newRoute]
+        };
       }
     });
+  };
+
+  // 루트 삭제
+  const handleRouteDelete = (routeId: string) => {
+    setRecord(prev => ({
+      ...prev,
+      routes: prev.routes.filter(route => route.id !== routeId)
+    }));
+  };
+
+  // 시도 횟수 증가
+  const handleAttemptsIncrease = (routeId: string, status: 'completed' | 'attempted') => {
+    setRecord(prev => ({
+      ...prev,
+      routes: prev.routes.map(route => {
+        if (route.id === routeId) {
+          if (status === 'completed') {
+            return { ...route, completedAttempts: route.completedAttempts + 1 };
+          } else {
+            return { ...route, attemptedAttempts: route.attemptedAttempts + 1 };
+          }
+        }
+        return route;
+      })
+    }));
+  };
+
+  // 시도 횟수 감소
+  const handleAttemptsDecrease = (routeId: string, status: 'completed' | 'attempted') => {
+    setRecord(prev => ({
+      ...prev,
+      routes: prev.routes.map(route => {
+        if (route.id === routeId) {
+          if (status === 'completed') {
+            return { ...route, completedAttempts: Math.max(0, route.completedAttempts - 1) };
+          } else {
+            return { ...route, attemptedAttempts: Math.max(0, route.attemptedAttempts - 1) };
+          }
+        }
+        return route;
+      })
+    }));
   };
 
   // 메모 변경
@@ -159,7 +225,7 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
       return;
     }
 
-    if (record.grade.length === 0) {
+    if (record.routes.length === 0) {
       showError('등반 문제를 선택해주세요.');
       return;
     }
@@ -171,7 +237,12 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
     console.log('저장된 기록:', record);
     
     showSimpleConfirm('운동 기록이 저장되었습니다. 이전 화면으로 돌아가시겠습니까?', () => {
-      navigation.goBack();
+      // RecordScreen으로 돌아가면서 새로 추가된 기록 정보 전달
+      navigation.navigate('Record', { 
+        selectedDate: record.date.toISOString().split('T')[0],
+        newRecord: record,
+        refresh: true 
+      });
     });
   };
 
@@ -330,6 +401,83 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
             </View>
           )}
         </View>
+        
+        {/* 등급 선택 */}
+        <GradeSelector
+          selectedGrade={record.routes.map(route => route.grade)}
+          onGradeSelect={handleGradeSelect}
+        />
+
+        {/* 등반 루트 리스트 */}
+        {record.routes.length > 0 && (
+          <View style={globalStyles.section}>
+            <Text style={globalStyles.sectionTitle}>등반한 루트</Text>
+            {record.routes.map((route) => (
+              <View key={route.id} style={styles.routeItem}>
+                {/* 등급과 삭제 버튼 */}
+                <View style={styles.routeHeader}>
+                  <Text style={styles.routeGrade}>{route.grade}</Text>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleRouteDelete(route.id)}
+                  >
+                    <Ionicons name="trash-outline" size={20} color={COLORS.ERROR} />
+                  </TouchableOpacity>
+                </View>
+                
+                {/* 완등/시도/프로젝트 상태 */}
+                <View style={styles.statusContainer}>
+                  {/* 완등 */}
+                  <View style={styles.statusRow}>
+                    <Text style={styles.statusLabel}>✅ 완등</Text>
+                    <View style={styles.attemptsContainer}>
+                      <TouchableOpacity
+                        style={styles.attemptsButton}
+                        onPress={() => handleAttemptsDecrease(route.id, 'completed')}
+                      >
+                        <Ionicons name="remove" size={16} color={COLORS.TEXT_SECONDARY} />
+                      </TouchableOpacity>
+                      <Text style={styles.routeAttempts}>{route.completedAttempts || 0}회</Text>
+                      <TouchableOpacity
+                        style={styles.attemptsButton}
+                        onPress={() => handleAttemptsIncrease(route.id, 'completed')}
+                      >
+                        <Ionicons name="add" size={16} color={COLORS.TEXT_SECONDARY} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  
+                  {/* 시도 */}
+                  <View style={styles.statusRow}>
+                    <Text style={styles.statusLabel}>🔄 시도</Text>
+                    <View style={styles.attemptsContainer}>
+                      <TouchableOpacity
+                        style={styles.attemptsButton}
+                        onPress={() => handleAttemptsDecrease(route.id, 'attempted')}
+                      >
+                        <Ionicons name="remove" size={16} color={COLORS.TEXT_SECONDARY} />
+                      </TouchableOpacity>
+                      <Text style={styles.routeAttempts}>{route.attemptedAttempts || 0}회</Text>
+                      <TouchableOpacity
+                        style={styles.attemptsButton}
+                        onPress={() => handleAttemptsIncrease(route.id, 'attempted')}
+                      >
+                        <Ionicons name="add" size={16} color={COLORS.TEXT_SECONDARY} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  
+                  {/* 프로젝트 상태 표시 */}
+                  {((route.completedAttempts || 0) === 0 && (route.attemptedAttempts || 0) === 0) && (
+                    <View style={styles.projectIndicator}>
+                      <Text style={styles.projectText}>🎯 프로젝트</Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
 
         {/* 컨디션 선택 */}
         <ConditionSelector
@@ -337,11 +485,6 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
           onConditionSelect={handleConditionSelect}
         />
 
-        {/* 등급 선택 */}
-        <GradeSelector
-          selectedGrade={record.grade}
-          onGradeSelect={handleGradeSelect}
-        />
 
         {/* 메모 입력 */}
         <View style={globalStyles.section}>
@@ -414,4 +557,71 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  routeItem: {
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: SPACING.RADIUS.MD,
+    padding: SPACING.MD,
+    marginBottom: SPACING.SM,
+    borderWidth: 1,
+    borderColor: COLORS.GRAY_200,
+  },
+  routeHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.SM,
+  },
+  routeGrade: {
+    fontSize: FONTS.SIZES.LG,
+    fontWeight: FONTS.WEIGHTS.BOLD,
+    color: COLORS.TEXT_PRIMARY,
+    marginRight: SPACING.SM,
+  },
+  statusContainer: {
+    marginTop: SPACING.SM,
+  },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.XS,
+  },
+  statusLabel: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
+    marginRight: SPACING.SM,
+  },
+  attemptsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 'auto',
+  },
+  attemptsButton: {
+    padding: SPACING.XS,
+    borderRadius: SPACING.RADIUS.SM,
+    backgroundColor: COLORS.GRAY_100,
+  },
+  routeAttempts: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
+    marginHorizontal: SPACING.XS,
+  },
+  projectIndicator: {
+    marginTop: SPACING.XS,
+    paddingVertical: SPACING.XS,
+    paddingHorizontal: SPACING.SM,
+    borderRadius: SPACING.RADIUS.SM,
+    backgroundColor: COLORS.GRAY_100,
+    alignItems: 'center',
+  },
+  projectText: {
+    fontSize: FONTS.SIZES.SM,
+    color: COLORS.TEXT_SECONDARY,
+  },
+  deleteButton: {
+    padding: SPACING.XS,
+    marginLeft: 'auto',
+  },
+});
 

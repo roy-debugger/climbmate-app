@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, SIZES, FONTS } from '@/constants';
+import { COLORS, SIZES, FONTS, TEXT_STYLES } from '@/constants';
 
 const RegisterScreen = () => {
   const [username, setUsername] = useState('');
@@ -82,7 +82,7 @@ const RegisterScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.BACKGROUND,
   },
   keyboardView: {
     flex: 1,
@@ -99,37 +99,37 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.margin * 3,
   },
   title: {
-    ...FONTS.largeTitle,
-    color: COLORS.primary,
+    ...TEXT_STYLES.DISPLAY_LARGE,
+    color: COLORS.PRIMARY,
     fontWeight: 'bold',
     marginBottom: SIZES.base,
   },
   subtitle: {
-    ...FONTS.body2,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
   },
   form: {
     marginBottom: SIZES.margin * 2,
   },
   input: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.SURFACE,
     padding: SIZES.padding,
     borderRadius: SIZES.radius,
     marginBottom: SIZES.margin,
     borderWidth: 1,
-    borderColor: COLORS.lightGray,
-    ...FONTS.body3,
+    borderColor: COLORS.GRAY_200,
+    ...TEXT_STYLES.BODY_MEDIUM,
   },
   registerButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.PRIMARY,
     padding: SIZES.padding,
     borderRadius: SIZES.radius,
     alignItems: 'center',
     marginTop: SIZES.margin,
   },
   registerButtonText: {
-    ...FONTS.body2,
-    color: COLORS.white,
+    ...TEXT_STYLES.BUTTON_MEDIUM,
+    color: COLORS.WHITE,
     fontWeight: '600',
   },
   footer: {
@@ -138,12 +138,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerText: {
-    ...FONTS.body3,
-    color: COLORS.textSecondary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
   },
   linkText: {
-    ...FONTS.body3,
-    color: COLORS.primary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.PRIMARY,
     fontWeight: '600',
   },
 });

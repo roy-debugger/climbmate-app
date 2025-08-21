@@ -7,35 +7,142 @@
 export { COLORS } from './colors';
 
 // 타이포그래피 관련
-export { FONTS } from './typography';
+export { FONTS, TEXT_STYLES } from './typography';
 
 // 간격 관련
 export { SPACING } from './spacing';
 
-// 레이아웃 관련
-export { LAYOUT } from './layout';
-export type {
-  ButtonHeight,
-  ButtonPadding,
-  ButtonBorderRadius,
-  CardBorderRadius,
-  CardPadding,
-  CardMargin,
-  InputHeight,
-  InputPadding,
-  InputBorderRadius,
-  ModalBorderRadius,
-  ModalPadding,
-  HeaderHeight,
-  HeaderPadding,
-  ShadowSize,
-  AnimationDuration,
-  AnimationEasing,
-  ZIndex,
-} from './layout';
+// 크기 관련
+export const SIZES = {
+  // 기본 크기
+  base: 16,
+  padding: 16,
+  margin: 16,
+  radius: 8,
+  
+  // 버튼 크기
+  buttonHeight: 44,
+  buttonPadding: 16,
+  buttonRadius: 8,
+  
+  // 입력 필드 크기
+  inputHeight: 44,
+  inputPadding: 16,
+  inputRadius: 8,
+  
+  // 카드 크기
+  cardPadding: 16,
+  cardMargin: 16,
+  cardRadius: 12,
+  
+  // 헤더 크기
+  headerHeight: 56,
+  headerPadding: 16,
+  
+  // 아이콘 크기
+  iconSmall: 16,
+  iconMedium: 24,
+  iconLarge: 32,
+  
+  // 아바타 크기
+  avatarSmall: 32,
+  avatarMedium: 48,
+  avatarLarge: 64,
+} as const;
+
+// 레이아웃 관련 상수들
+export const LAYOUT = {
+  BUTTON: {
+    HEIGHT: {
+      SMALL: 36,
+      MEDIUM: 44,
+      LARGE: 52,
+    },
+    PADDING: {
+      SMALL: 12,
+      MEDIUM: 16,
+      LARGE: 20,
+    },
+    BORDER_RADIUS: {
+      SMALL: 6,
+      MEDIUM: 8,
+      LARGE: 12,
+    },
+  },
+  CARD: {
+    PADDING: {
+      SMALL: 12,
+      MEDIUM: 16,
+      LARGE: 20,
+    },
+    MARGIN: {
+      SMALL: 8,
+      MEDIUM: 12,
+      LARGE: 16,
+    },
+    BORDER_RADIUS: {
+      SMALL: 8,
+      MEDIUM: 12,
+      LARGE: 16,
+    },
+  },
+  INPUT: {
+    HEIGHT: 44,
+    PADDING: 16,
+    BORDER_RADIUS: 8,
+  },
+  MODAL: {
+    BORDER_RADIUS: 16,
+    PADDING: 20,
+  },
+  HEADER: {
+    HEIGHT: 56,
+    PADDING: 16,
+  },
+  SHADOW: {
+    SMALL: {
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+      elevation: 1,
+    },
+    MEDIUM: {
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    LARGE: {
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      elevation: 6,
+    },
+  },
+  ANIMATION: {
+    DURATION: {
+      FAST: 200,
+      NORMAL: 300,
+      SLOW: 500,
+    },
+    EASING: {
+      LINEAR: 'linear',
+      EASE_IN: 'ease-in',
+      EASE_OUT: 'ease-out',
+      EASE_IN_OUT: 'ease-in-out',
+    },
+  },
+  Z_INDEX: {
+    BASE: 0,
+    CARD: 1,
+    MODAL: 1000,
+    TOOLTIP: 1100,
+    TOAST: 1200,
+  },
+} as const;
 
 // 테마 관련
-export { COLORS as THEME_COLORS, SIZES, FONTS as THEME_FONTS, SHADOWS } from './theme';
+export { FONTS as THEME_FONTS } from './typography';
 
 // 스토리지 관련
 export { STORAGE_KEYS, STORAGE_CONFIG, STORAGE_ERRORS, MIGRATION_VERSIONS } from './storage';

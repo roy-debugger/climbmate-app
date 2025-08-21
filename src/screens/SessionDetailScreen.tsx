@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, SIZES, FONTS } from '@/constants';
+import { COLORS, SIZES, FONTS, TEXT_STYLES } from '@/constants';
 
 const SessionDetailScreen = () => {
   return (
@@ -46,38 +46,38 @@ const SessionDetailScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.BACKGROUND,
   },
   scrollView: {
     flex: 1,
   },
   header: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.PRIMARY,
     padding: SIZES.padding,
     alignItems: 'center',
   },
   date: {
-    ...FONTS.h2,
-    color: COLORS.white,
+    ...TEXT_STYLES.H2,
+    color: COLORS.WHITE,
     marginBottom: SIZES.base,
   },
   duration: {
-    ...FONTS.body2,
-    color: COLORS.white,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.WHITE,
     opacity: 0.9,
   },
   section: {
     padding: SIZES.padding,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.lightGray,
+    borderBottomColor: COLORS.GRAY_200,
   },
   sectionTitle: {
-    ...FONTS.h3,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.H3,
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: SIZES.margin,
   },
   gymInfo: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.SURFACE,
     padding: SIZES.padding,
     borderRadius: SIZES.radius,
   },

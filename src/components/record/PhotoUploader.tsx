@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   Image,
-  ScrollView,
+  StyleSheet,
   Alert,
+  ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { COLORS, SPACING, FONTS, TEXT_STYLES } from '@/constants';
+import { COLORS } from '../../constants/colors';
+import { SPACING } from '../../constants/spacing';
+import { TEXT_STYLES } from '../../constants/typography';
 
 interface PhotoUploaderProps {
   photos: string[];
@@ -18,35 +20,27 @@ interface PhotoUploaderProps {
   maxPhotos?: number;
 }
 
-const PhotoUploader: React.FC<PhotoUploaderProps> = ({
+export const PhotoUploader: React.FC<PhotoUploaderProps> = ({
   photos,
   onPhotosChange,
   maxPhotos = 3,
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  // 사진 선택 권한 요청
   const requestPermissions = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert(
         '권한 필요',
         '사진을 선택하려면 갤러리 접근 권한이 필요합니다.',
-        [{ text: '확인' }]
+        [{ text: '설정으로 이동', onPress: () => {} }, { text: '취소', style: 'cancel' }]
       );
       return false;
     }
     return true;
   };
 
-  // 사진 선택
   const pickImage = async () => {
     if (photos.length >= maxPhotos) {
-      Alert.alert(
-        '사진 개수 제한',
-        `최대 ${maxPhotos}장까지 선택할 수 있습니다.`,
-        [{ text: '확인' }]
-      );
+      Alert.alert('알림', `최대 ${maxPhotos}장까지 업로드할 수 있습니다.`);
       return;
     }
 
@@ -54,7 +48,6 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({
     if (!hasPermission) return;
 
     try {
-      setIsLoading(true);
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -67,14 +60,42 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({
         onPhotosChange([...photos, newPhoto]);
       }
     } catch (error) {
-      console.error('사진 선택 오류:', error);
       Alert.alert('오류', '사진을 선택하는 중 오류가 발생했습니다.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // 사진 제거
+  const takePhoto = async () => {
+    if (photos.length >= maxPhotos) {
+      Alert.alert('알림', `최대 ${maxPhotos}장까지 업로드할 수 있습니다.`);
+      return;
+    }
+
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(
+        '권한 필요',
+        '사진을 촬영하려면 카메라 접근 권한이 필요합니다.',
+        [{ text: '설정으로 이동', onPress: () => {} }, { text: '취소', style: 'cancel' }]
+      );
+      return;
+    }
+
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        const newPhoto = result.assets[0].uri;
+        onPhotosChange([...photos, newPhoto]);
+      }
+    } catch (error) {
+      Alert.alert('오류', '사진을 촬영하는 중 오류가 발생했습니다.');
+    }
+  };
+
   const removePhoto = (index: number) => {
     Alert.alert(
       '사진 삭제',
@@ -93,77 +114,93 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({
     );
   };
 
-  // 사진 미리보기
-  const renderPhotoPreview = (photo: string, index: number) => (
-    <View key={index} style={styles.photoContainer}>
-      <Image source={{ uri: photo }} style={styles.photo} />
-      <TouchableOpacity
-        style={styles.removeButton}
-        onPress={() => removePhoto(index)}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      >
-        <Ionicons name="close-circle" size={24} color={COLORS.ERROR} />
-      </TouchableOpacity>
-    </View>
-  );
+  const showImageOptions = () => {
+    Alert.alert(
+      '사진 추가',
+      '사진을 추가하는 방법을 선택하세요',
+      [
+        { text: '갤러리에서 선택', onPress: pickImage },
+        { text: '카메라로 촬영', onPress: takePhoto },
+        { text: '취소', style: 'cancel' },
+      ]
+    );
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>사진 추가</Text>
       <Text style={styles.subtitle}>
-        운동 기록에 사진을 추가해보세요 (선택사항, 최대 {maxPhotos}장)
+        운동 기록에 사진을 추가해보세요 (최대 {maxPhotos}장)
       </Text>
 
-      {/* 사진 미리보기 */}
-      {photos.length > 0 && (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.photosContainer}
-          style={styles.photosScrollView}
-        >
-          {photos.map((photo, index) => renderPhotoPreview(photo, index))}
-        </ScrollView>
-      )}
+      {/* 사진 그리드 */}
+      <View style={styles.photoGrid}>
+        {photos.map((photo, index) => (
+          <View key={index} style={styles.photoContainer}>
+            <Image source={{ uri: photo }} style={styles.photo} />
+            <TouchableOpacity
+              style={styles.removeButton}
+              onPress={() => removePhoto(index)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="close-circle" size={24} color={COLORS.ERROR} />
+            </TouchableOpacity>
+          </View>
+        ))}
 
-      {/* 사진 추가 버튼 */}
-      {photos.length < maxPhotos && (
-        <TouchableOpacity
-          style={styles.addPhotoButton}
-          onPress={pickImage}
-          disabled={isLoading}
-          activeOpacity={0.7}
-        >
-          {isLoading ? (
-            <View style={styles.loadingContainer}>
-              <Ionicons name="hourglass" size={24} color={COLORS.PRIMARY} />
-              <Text style={styles.loadingText}>처리 중...</Text>
-            </View>
-          ) : (
-            <>
-              <Ionicons name="camera" size={24} color={COLORS.PRIMARY} />
-              <Text style={styles.addPhotoText}>사진 추가</Text>
-            </>
-          )}
-        </TouchableOpacity>
-      )}
+        {/* 사진 추가 버튼 */}
+        {photos.length < maxPhotos && (
+          <TouchableOpacity style={styles.addPhotoButton} onPress={showImageOptions}>
+            <Ionicons name="add" size={32} color={COLORS.PRIMARY} />
+            <Text style={styles.addPhotoText}>사진 추가</Text>
+          </TouchableOpacity>
+        )}
+      </View>
 
       {/* 사진 개수 표시 */}
       <View style={styles.photoCountContainer}>
         <Text style={styles.photoCountText}>
           {photos.length} / {maxPhotos} 장
         </Text>
+        {photos.length > 0 && (
+          <TouchableOpacity
+            style={styles.clearAllButton}
+            onPress={() => {
+              Alert.alert(
+                '모든 사진 삭제',
+                '업로드된 모든 사진을 삭제하시겠습니까?',
+                [
+                  { text: '취소', style: 'cancel' },
+                  {
+                    text: '삭제',
+                    style: 'destructive',
+                    onPress: () => onPhotosChange([]),
+                  },
+                ]
+              );
+            }}
+          >
+            <Text style={styles.clearAllText}>모두 삭제</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
-      {/* 사진 관련 팁 */}
-      {photos.length === 0 && (
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsTitle}>💡 사진 추가 팁</Text>
-          <Text style={styles.tipsText}>
-            • 클라이밍한 문제나 성취한 순간을 기록해보세요{'\n'}
-            • 사진은 나중에 운동 기록을 돌아볼 때 도움이 됩니다{'\n'}
-            • 개인정보가 포함되지 않도록 주의해주세요
-          </Text>
+      {/* 사진 미리보기 (가로 스크롤) */}
+      {photos.length > 0 && (
+        <View style={styles.previewContainer}>
+          <Text style={styles.previewTitle}>사진 미리보기</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.previewScrollContent}
+          >
+            {photos.map((photo, index) => (
+              <View key={index} style={styles.previewPhotoContainer}>
+                <Image source={{ uri: photo }} style={styles.previewPhoto} />
+                <Text style={styles.previewPhotoNumber}>{index + 1}</Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
       )}
     </View>
@@ -174,108 +211,105 @@ const styles = StyleSheet.create({
   container: {
     padding: SPACING.LAYOUT.SCREEN_PADDING,
   },
-  
   title: {
-    ...TEXT_STYLES.H3,
+    ...TEXT_STYLES.H4,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
-  
   subtitle: {
     ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.LG,
   },
-  
-  photosScrollView: {
-    marginBottom: SPACING.MD,
-  },
-  
-  photosContainer: {
-    paddingHorizontal: SPACING.LAYOUT.SCREEN_PADDING,
+  photoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: SPACING.SM,
+    marginBottom: SPACING.LG,
   },
-  
   photoContainer: {
     position: 'relative',
-  },
-  
-  photo: {
     width: 100,
     height: 100,
-    borderRadius: SPACING.RADIUS.MD,
-    backgroundColor: COLORS.GRAY_100,
   },
-  
+  photo: {
+    width: '100%',
+    height: '100%',
+    borderRadius: SPACING.RADIUS.MD,
+  },
   removeButton: {
     position: 'absolute',
     top: -8,
     right: -8,
     backgroundColor: COLORS.WHITE,
-    borderRadius: SPACING.RADIUS.ROUND,
+    borderRadius: 12,
+    ...SPACING.SHADOW.SM,
   },
-  
   addPhotoButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: SPACING.LG,
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: SPACING.RADIUS.MD,
-    borderWidth: 2,
+    width: 100,
+    height: 100,
+    borderWidth: SPACING.BORDER.THICK,
     borderColor: COLORS.PRIMARY,
     borderStyle: 'dashed',
-    marginBottom: SPACING.MD,
-  },
-  
-  loadingContainer: {
-    flexDirection: 'row',
+    borderRadius: SPACING.RADIUS.MD,
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: COLORS.PRIMARY_LIGHT + '10',
   },
-  
-  loadingText: {
-    ...TEXT_STYLES.BODY_MEDIUM,
-    color: COLORS.PRIMARY,
-    marginLeft: SPACING.SM,
-  },
-  
   addPhotoText: {
-    ...TEXT_STYLES.BODY_LARGE,
+    ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.PRIMARY,
-    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
-    marginLeft: SPACING.SM,
+    marginTop: SPACING.XS,
+    textAlign: 'center',
   },
-  
   photoCountContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: SPACING.MD,
+    marginBottom: SPACING.LG,
   },
-  
   photoCountText: {
-    ...TEXT_STYLES.LABEL,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_SECONDARY,
   },
-  
-  tipsContainer: {
-    padding: SPACING.MD,
-    backgroundColor: COLORS.INFO + '10',
-    borderRadius: SPACING.RADIUS.MD,
-    borderLeftWidth: 4,
-    borderLeftColor: COLORS.INFO,
+  clearAllButton: {
+    padding: SPACING.XS,
   },
-  
-  tipsTitle: {
-    ...TEXT_STYLES.BODY_LARGE,
-    color: COLORS.INFO,
-    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
+  clearAllText: {
+    ...TEXT_STYLES.BODY_SMALL,
+    color: COLORS.ERROR,
+    textDecorationLine: 'underline',
+  },
+  previewContainer: {
+    marginTop: SPACING.MD,
+  },
+  previewTitle: {
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.SM,
   },
-  
-  tipsText: {
-    ...TEXT_STYLES.BODY_SMALL,
-    color: COLORS.TEXT_SECONDARY,
-    lineHeight: FONTS.LINE_HEIGHTS.RELAXED * FONTS.SIZES.SM,
+  previewScrollContent: {
+    paddingRight: SPACING.LAYOUT.SCREEN_PADDING,
+  },
+  previewPhotoContainer: {
+    position: 'relative',
+    marginRight: SPACING.SM,
+  },
+  previewPhoto: {
+    width: 120,
+    height: 90,
+    borderRadius: SPACING.RADIUS.SM,
+  },
+  previewPhotoNumber: {
+    position: 'absolute',
+    top: SPACING.XS,
+    left: SPACING.XS,
+    backgroundColor: COLORS.PRIMARY,
+    color: COLORS.WHITE,
+    fontSize: 12,
+    fontWeight: '600',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
   },
 });
-
-export default PhotoUploader;

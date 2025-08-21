@@ -2,70 +2,89 @@ import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS, TEXT_STYLES } from '@/constants';
+import { COLORS } from '../../constants/colors';
+import { SPACING } from '../../constants/spacing';
+import { TEXT_STYLES } from '../../constants/typography';
 
-interface GradeOption {
+interface Grade {
   value: string;
   label: string;
   color: string;
-  backgroundColor: string;
-  description: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert';
 }
 
-const GRADE_OPTIONS: GradeOption[] = [
-  { value: 'V0', label: 'V0', color: COLORS.WHITE, backgroundColor: COLORS.GRAY_500, description: '초급' },
-  { value: 'V1', label: 'V1', color: COLORS.WHITE, backgroundColor: COLORS.GRAY_400, description: '초급' },
-  { value: 'V2', label: 'V2', color: COLORS.WHITE, backgroundColor: COLORS.GRAY_300, description: '초급' },
-  { value: 'V3', label: 'V3', color: COLORS.WHITE, backgroundColor: COLORS.INFO, description: '중급' },
-  { value: 'V4', label: 'V4', color: COLORS.WHITE, backgroundColor: COLORS.INFO_LIGHT, description: '중급' },
-  { value: 'V5', label: 'V5', color: COLORS.WHITE, backgroundColor: COLORS.SUCCESS, description: '중급' },
-  { value: 'V6', label: 'V6', color: COLORS.WHITE, backgroundColor: COLORS.SUCCESS_LIGHT, description: '고급' },
-  { value: 'V7', label: 'V7', color: COLORS.WHITE, backgroundColor: COLORS.WARNING, description: '고급' },
-  { value: 'V8', label: 'V8', color: COLORS.WHITE, backgroundColor: COLORS.WARNING_LIGHT, description: '고급' },
-  { value: 'V9', label: 'V9', color: COLORS.WHITE, backgroundColor: COLORS.ERROR, description: '전문가' },
-  { value: 'V10', label: 'V10', color: COLORS.WHITE, backgroundColor: COLORS.ERROR_LIGHT, description: '전문가' },
+const GRADES: Grade[] = [
+  { value: 'V0', label: 'V0', color: COLORS.SUCCESS, difficulty: 'beginner' },
+  { value: 'V1', label: 'V1', color: COLORS.SUCCESS, difficulty: 'beginner' },
+  { value: 'V2', label: 'V2', color: COLORS.SUCCESS, difficulty: 'beginner' },
+  { value: 'V3', label: 'V3', color: COLORS.INFO, difficulty: 'intermediate' },
+  { value: 'V4', label: 'V4', color: COLORS.INFO, difficulty: 'intermediate' },
+  { value: 'V5', label: 'V5', color: COLORS.INFO, difficulty: 'intermediate' },
+  { value: 'V6', label: 'V6', color: COLORS.WARNING, difficulty: 'advanced' },
+  { value: 'V7', label: 'V7', color: COLORS.WARNING, difficulty: 'advanced' },
+  { value: 'V8', label: 'V8', color: COLORS.ERROR, difficulty: 'expert' },
+  { value: 'V9', label: 'V9', color: COLORS.ERROR, difficulty: 'expert' },
+  { value: 'V10', label: 'V10', color: COLORS.ERROR, difficulty: 'expert' },
 ];
+
+const DIFFICULTY_LABELS = {
+  beginner: '초급',
+  intermediate: '중급',
+  advanced: '고급',
+  expert: '전문가',
+};
 
 interface GradeSelectorProps {
   selectedGrade: string | null;
   onGradeSelect: (grade: string) => void;
 }
 
-const GradeSelector: React.FC<GradeSelectorProps> = ({
+export const GradeSelector: React.FC<GradeSelectorProps> = ({
   selectedGrade,
   onGradeSelect,
 }) => {
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner': return COLORS.SUCCESS;
+      case 'intermediate': return COLORS.INFO;
+      case 'advanced': return COLORS.WARNING;
+      case 'expert': return COLORS.ERROR;
+      default: return COLORS.TEXT_SECONDARY;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>오늘의 최고 등급</Text>
       <Text style={styles.subtitle}>클라이밍한 등급 중 가장 높은 등급을 선택해주세요</Text>
       
-      <View style={styles.gradesGrid}>
-        {GRADE_OPTIONS.map((grade) => (
+      {/* 등급 그리드 */}
+      <View style={styles.gradeGrid}>
+        {GRADES.map((grade) => (
           <TouchableOpacity
             key={grade.value}
             style={[
               styles.gradeButton,
-              { backgroundColor: grade.backgroundColor },
-              selectedGrade === grade.value && styles.selectedGrade,
+              { borderColor: grade.color },
+              selectedGrade === grade.value && styles.selectedGradeButton,
             ]}
             onPress={() => onGradeSelect(grade.value)}
-            activeOpacity={0.8}
+            activeOpacity={0.7}
           >
             <Text style={[
               styles.gradeLabel,
               { color: grade.color },
-              selectedGrade === grade.value && styles.selectedGradeLabel,
+              selectedGrade === grade.value && styles.selectedGradeText,
             ]}>
               {grade.label}
             </Text>
             
             {selectedGrade === grade.value && (
-              <View style={styles.checkIcon}>
+              <View style={[styles.checkmark, { backgroundColor: grade.color }]}>
                 <Ionicons name="checkmark" size={16} color={COLORS.WHITE} />
               </View>
             )}
@@ -73,45 +92,34 @@ const GradeSelector: React.FC<GradeSelectorProps> = ({
         ))}
       </View>
       
-      {/* 등급별 설명 */}
-      <View style={styles.gradeLegend}>
-        <Text style={styles.legendTitle}>등급별 난이도:</Text>
+      {/* 난이도별 구분 */}
+      <View style={styles.difficultyLegend}>
+        <Text style={styles.legendTitle}>난이도 구분</Text>
         <View style={styles.legendItems}>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendColor, { backgroundColor: COLORS.GRAY_400 }]} />
-            <Text style={styles.legendText}>V0-V2: 초급</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendColor, { backgroundColor: COLORS.INFO }]} />
-            <Text style={styles.legendText}>V3-V5: 중급</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendColor, { backgroundColor: COLORS.SUCCESS }]} />
-            <Text style={styles.legendText}>V6-V8: 고급</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendColor, { backgroundColor: COLORS.ERROR }]} />
-            <Text style={styles.legendText}>V9-V10: 전문가</Text>
-          </View>
+          {Object.entries(DIFFICULTY_LABELS).map(([key, label]) => {
+            const grade = GRADES.find(g => g.difficulty === key);
+            return (
+              <View key={key} style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: grade?.color }]} />
+                <Text style={styles.legendText}>{label}</Text>
+              </View>
+            );
+          })}
         </View>
       </View>
       
+      {/* 선택된 등급 정보 */}
       {selectedGrade && (
         <View style={styles.selectedGradeInfo}>
-          <Text style={styles.selectedGradeLabel}>선택된 등급:</Text>
-          <View style={styles.selectedGradeContent}>
-            <View style={[
-              styles.selectedGradeBadge,
-              { backgroundColor: GRADE_OPTIONS.find(g => g.value === selectedGrade)?.backgroundColor }
-            ]}>
-              <Text style={styles.selectedGradeBadgeText}>
-                {selectedGrade}
-              </Text>
-            </View>
-            <Text style={styles.selectedGradeDescription}>
-              {GRADE_OPTIONS.find(g => g.value === selectedGrade)?.description} 난이도
-            </Text>
-          </View>
+          <Text style={styles.selectedGradeTitle}>
+            선택된 등급: {selectedGrade}
+          </Text>
+          <Text style={styles.selectedGradeDescription}>
+            {GRADES.find(g => g.value === selectedGrade)?.difficulty === 'beginner' && '초급자도 도전할 수 있는 등급입니다!'}
+            {GRADES.find(g => g.value === selectedGrade)?.difficulty === 'intermediate' && '중급자 수준의 등급입니다.'}
+            {GRADES.find(g => g.value === selectedGrade)?.difficulty === 'advanced' && '고급자 수준의 등급입니다.'}
+            {GRADES.find(g => g.value === selectedGrade)?.difficulty === 'expert' && '전문가 수준의 등급입니다!'}
+          </Text>
         </View>
       )}
     </View>
@@ -122,132 +130,101 @@ const styles = StyleSheet.create({
   container: {
     padding: SPACING.LAYOUT.SCREEN_PADDING,
   },
-  
   title: {
-    ...TEXT_STYLES.H3,
+    ...TEXT_STYLES.H4,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
-  
   subtitle: {
     ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.LG,
   },
-  
-  gradesGrid: {
+  gradeGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     gap: SPACING.SM,
     marginBottom: SPACING.LG,
   },
-  
   gradeButton: {
-    width: (SPACING.LAYOUT.SCREEN_PADDING * 2 - SPACING.SM) / 3,
-    height: 60,
+    width: '30%',
+    aspectRatio: 1,
+    backgroundColor: COLORS.SURFACE,
     borderRadius: SPACING.RADIUS.MD,
-    alignItems: 'center',
+    borderWidth: SPACING.BORDER.THICK,
     justifyContent: 'center',
+    alignItems: 'center',
     position: 'relative',
+    ...SPACING.SHADOW.SM,
   },
-  
-  selectedGrade: {
-    transform: [{ scale: 1.05 }],
-    shadowColor: COLORS.PRIMARY,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 6,
+  selectedGradeButton: {
+    backgroundColor: COLORS.PRIMARY_LIGHT + '10',
+    ...SPACING.SHADOW.MD,
   },
-  
   gradeLabel: {
-    ...TEXT_STYLES.BUTTON_LARGE,
-    fontWeight: FONTS.WEIGHTS.BOLD,
+    ...TEXT_STYLES.H3,
+    fontWeight: '700',
   },
-  
-
-  
-  checkIcon: {
+  selectedGradeText: {
+    color: COLORS.PRIMARY,
+  },
+  checkmark: {
     position: 'absolute',
-    top: -5,
-    right: -5,
+    top: SPACING.XS,
+    right: SPACING.XS,
     width: 20,
     height: 20,
-    borderRadius: SPACING.RADIUS.ROUND,
-    backgroundColor: COLORS.PRIMARY,
-    alignItems: 'center',
+    borderRadius: 10,
     justifyContent: 'center',
+    alignItems: 'center',
+    ...SPACING.SHADOW.SM,
   },
-  
-  gradeLegend: {
+  difficultyLegend: {
+    backgroundColor: COLORS.GRAY_100,
+    padding: SPACING.MD,
+    borderRadius: SPACING.RADIUS.MD,
     marginBottom: SPACING.LG,
   },
-  
   legendTitle: {
     ...TEXT_STYLES.LABEL,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.SM,
   },
-  
   legendItems: {
-    gap: SPACING.XS,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.MD,
   },
-  
   legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: SPACING.XS,
   },
-  
-  legendColor: {
-    width: 16,
-    height: 16,
-    borderRadius: SPACING.RADIUS.XS,
-    marginRight: SPACING.SM,
+  legendDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
   },
-  
   legendText: {
     ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.TEXT_SECONDARY,
   },
-  
   selectedGradeInfo: {
+    backgroundColor: COLORS.PRIMARY_LIGHT + '10',
     padding: SPACING.MD,
-    backgroundColor: COLORS.PRIMARY + '10',
     borderRadius: SPACING.RADIUS.MD,
     borderLeftWidth: 4,
     borderLeftColor: COLORS.PRIMARY,
   },
-  
-  selectedGradeLabel: {
-    ...TEXT_STYLES.LABEL,
-    color: COLORS.TEXT_SECONDARY,
-    marginBottom: SPACING.SM,
+  selectedGradeTitle: {
+    ...TEXT_STYLES.BODY_LARGE,
+    color: COLORS.PRIMARY,
+    fontWeight: '600',
+    marginBottom: SPACING.XS,
   },
-  
-  selectedGradeContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  
-  selectedGradeBadge: {
-    paddingHorizontal: SPACING.MD,
-    paddingVertical: SPACING.XS,
-    borderRadius: SPACING.RADIUS.MD,
-    marginRight: SPACING.SM,
-  },
-  
-  selectedGradeBadgeText: {
-    ...TEXT_STYLES.BUTTON_MEDIUM,
-    color: COLORS.WHITE,
-    fontWeight: FONTS.WEIGHTS.BOLD,
-  },
-  
   selectedGradeDescription: {
     ...TEXT_STYLES.BODY_MEDIUM,
-    color: COLORS.PRIMARY,
-    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
+    color: COLORS.TEXT_SECONDARY,
   },
 });
-
-export default GradeSelector;

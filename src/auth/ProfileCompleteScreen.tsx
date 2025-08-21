@@ -419,8 +419,8 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: COLORS.PRIMARY,
-    borderBottomLeftRadius: LAYOUT.CARD.BORDER_RADIUS.XLARGE,
-    borderBottomRightRadius: LAYOUT.CARD.BORDER_RADIUS.XLARGE,
+    borderBottomLeftRadius: LAYOUT.CARD.BORDER_RADIUS.LARGE,
+    borderBottomRightRadius: LAYOUT.CARD.BORDER_RADIUS.LARGE,
     zIndex: LAYOUT.Z_INDEX.BASE,
   },
   title: {
@@ -477,7 +477,7 @@ const styles = StyleSheet.create({
   },
   genderButtonText: {
     fontSize: FONTS.SIZES.SM,
-    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     color: COLORS.TEXT_PRIMARY,
     marginLeft: SPACING.XS,
   },
@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
   },
   heightUnit: {
     fontSize: FONTS.SIZES.SM,
-    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     color: COLORS.TEXT_PRIMARY,
   },
   levelGrid: {

@@ -2,64 +2,66 @@ import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS, TEXT_STYLES } from '@/constants';
+import { COLORS } from '../../constants/colors';
+import { SPACING } from '../../constants/spacing';
+import { TEXT_STYLES } from '../../constants/typography';
 
-interface ConditionOption {
-  value: number;
+interface Condition {
+  level: number;
   emoji: string;
   label: string;
   description: string;
   color: string;
 }
 
-const CONDITION_OPTIONS: ConditionOption[] = [
+const CONDITIONS: Condition[] = [
   {
-    value: 1,
+    level: 1,
     emoji: '😵',
     label: '매우 나쁨',
-    description: '컨디션이 매우 안 좋음',
+    description: '컨디션이 매우 좋지 않음',
     color: COLORS.ERROR,
   },
   {
-    value: 2,
+    level: 2,
     emoji: '😞',
     label: '나쁨',
     description: '컨디션이 좋지 않음',
     color: COLORS.WARNING,
   },
   {
-    value: 3,
+    level: 3,
     emoji: '😐',
     label: '보통',
     description: '평범한 컨디션',
-    color: COLORS.GRAY_500,
+    color: COLORS.TEXT_SECONDARY,
   },
   {
-    value: 4,
+    level: 4,
     emoji: '😊',
     label: '좋음',
     description: '컨디션이 좋음',
     color: COLORS.SUCCESS,
   },
   {
-    value: 5,
+    level: 5,
     emoji: '🤩',
     label: '매우 좋음',
-    description: '컨디션이 최고!',
+    description: '컨디션이 매우 좋음',
     color: COLORS.PRIMARY,
   },
 ];
 
 interface ConditionSelectorProps {
   selectedCondition: number | null;
-  onConditionSelect: (condition: number) => void;
+  onConditionSelect: (level: number) => void;
 }
 
-const ConditionSelector: React.FC<ConditionSelectorProps> = ({
+export const ConditionSelector: React.FC<ConditionSelectorProps> = ({
   selectedCondition,
   onConditionSelect,
 }) => {
@@ -68,38 +70,38 @@ const ConditionSelector: React.FC<ConditionSelectorProps> = ({
       <Text style={styles.title}>오늘의 컨디션</Text>
       <Text style={styles.subtitle}>운동할 때 컨디션을 선택해주세요</Text>
       
-      <View style={styles.optionsContainer}>
-        {CONDITION_OPTIONS.map((option) => (
+      <View style={styles.conditionGrid}>
+        {CONDITIONS.map((condition) => (
           <TouchableOpacity
-            key={option.value}
+            key={condition.level}
             style={[
-              styles.optionButton,
-              selectedCondition === option.value && styles.selectedOption,
+              styles.conditionItem,
+              selectedCondition === condition.level && styles.selectedConditionItem,
             ]}
-            onPress={() => onConditionSelect(option.value)}
+            onPress={() => onConditionSelect(condition.level)}
             activeOpacity={0.7}
           >
-            <View style={styles.emojiContainer}>
-              <Text style={styles.emoji}>{option.emoji}</Text>
-            </View>
-            
-            <View style={styles.optionInfo}>
+            <View style={styles.conditionContent}>
+              <Text style={styles.conditionEmoji}>{condition.emoji}</Text>
               <Text style={[
-                styles.optionLabel,
-                selectedCondition === option.value && styles.selectedOptionLabel,
+                styles.conditionLabel,
+                selectedCondition === condition.level && styles.selectedConditionText,
               ]}>
-                {option.label}
+                {condition.label}
               </Text>
               <Text style={[
-                styles.optionDescription,
-                selectedCondition === option.value && styles.selectedOptionDescription,
+                styles.conditionDescription,
+                selectedCondition === condition.level && styles.selectedConditionText,
               ]}>
-                {option.description}
+                {condition.description}
               </Text>
             </View>
             
-            {selectedCondition === option.value && (
-              <View style={[styles.checkIcon, { backgroundColor: option.color }]}>
+            {selectedCondition === condition.level && (
+              <View style={[
+                styles.checkmark,
+                { backgroundColor: condition.color }
+              ]}>
                 <Ionicons name="checkmark" size={16} color={COLORS.WHITE} />
               </View>
             )}
@@ -108,16 +110,13 @@ const ConditionSelector: React.FC<ConditionSelectorProps> = ({
       </View>
       
       {selectedCondition && (
-        <View style={styles.selectedInfo}>
-          <Text style={styles.selectedInfoLabel}>선택된 컨디션:</Text>
-          <View style={styles.selectedInfoContent}>
-            <Text style={styles.selectedEmoji}>
-              {CONDITION_OPTIONS.find(opt => opt.value === selectedCondition)?.emoji}
-            </Text>
-            <Text style={styles.selectedInfoText}>
-              {CONDITION_OPTIONS.find(opt => opt.value === selectedCondition)?.label}
-            </Text>
-          </View>
+        <View style={styles.selectedConditionInfo}>
+          <Text style={styles.selectedConditionTitle}>
+            선택된 컨디션: {CONDITIONS[selectedCondition - 1]?.label}
+          </Text>
+          <Text style={styles.selectedConditionDescription}>
+            {CONDITIONS[selectedCondition - 1]?.description}
+          </Text>
         </View>
       )}
     </View>
@@ -128,115 +127,90 @@ const styles = StyleSheet.create({
   container: {
     padding: SPACING.LAYOUT.SCREEN_PADDING,
   },
-  
   title: {
-    ...TEXT_STYLES.H3,
+    ...TEXT_STYLES.H4,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: SPACING.XS,
   },
-  
   subtitle: {
     ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.LG,
   },
-  
-  optionsContainer: {
-    gap: SPACING.MD,
-  },
-  
-  optionButton: {
+  conditionGrid: {
     flexDirection: 'row',
-    alignItems: 'center',
-    padding: SPACING.MD,
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: SPACING.SM,
+    marginBottom: SPACING.LG,
+  },
+  conditionItem: {
+    width: '48%',
     backgroundColor: COLORS.SURFACE,
     borderRadius: SPACING.RADIUS.MD,
-    borderWidth: 1,
+    padding: SPACING.MD,
+    borderWidth: SPACING.BORDER.THIN,
     borderColor: COLORS.GRAY_200,
-    minHeight: 80,
+    ...SPACING.SHADOW.SM,
+    position: 'relative',
+    minHeight: 100,
   },
-  
-  selectedOption: {
+  selectedConditionItem: {
     borderColor: COLORS.PRIMARY,
-    backgroundColor: COLORS.PRIMARY + '10',
+    backgroundColor: COLORS.PRIMARY_LIGHT + '10',
+    ...SPACING.SHADOW.MD,
   },
-  
-  emojiContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: SPACING.RADIUS.ROUND,
-    backgroundColor: COLORS.GRAY_100,
+  conditionContent: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: SPACING.MD,
-  },
-  
-  emoji: {
-    fontSize: 24,
-  },
-  
-  optionInfo: {
     flex: 1,
   },
-  
-  optionLabel: {
-    ...TEXT_STYLES.BODY_LARGE,
+  conditionEmoji: {
+    fontSize: 32,
+    marginBottom: SPACING.SM,
+  },
+  conditionLabel: {
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_PRIMARY,
-    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
+    fontWeight: '600',
+    textAlign: 'center',
     marginBottom: SPACING.XS,
   },
-  
-  selectedOptionLabel: {
-    color: COLORS.PRIMARY,
-  },
-  
-  optionDescription: {
+  conditionDescription: {
     ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.TEXT_SECONDARY,
+    textAlign: 'center',
+    lineHeight: 16,
   },
-  
-  selectedOptionDescription: {
-    color: COLORS.PRIMARY + '80',
+  selectedConditionText: {
+    color: COLORS.PRIMARY,
   },
-  
-  checkIcon: {
+  checkmark: {
+    position: 'absolute',
+    top: SPACING.SM,
+    right: SPACING.SM,
     width: 24,
     height: 24,
-    borderRadius: SPACING.RADIUS.ROUND,
-    alignItems: 'center',
+    borderRadius: 12,
     justifyContent: 'center',
+    alignItems: 'center',
+    ...SPACING.SHADOW.SM,
   },
-  
-  selectedInfo: {
-    marginTop: SPACING.LG,
+  selectedConditionInfo: {
+    backgroundColor: COLORS.PRIMARY_LIGHT + '10',
     padding: SPACING.MD,
-    backgroundColor: COLORS.PRIMARY + '10',
     borderRadius: SPACING.RADIUS.MD,
     borderLeftWidth: 4,
     borderLeftColor: COLORS.PRIMARY,
   },
-  
-  selectedInfoLabel: {
-    ...TEXT_STYLES.LABEL,
-    color: COLORS.TEXT_SECONDARY,
-    marginBottom: SPACING.SM,
-  },
-  
-  selectedInfoContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  
-  selectedEmoji: {
-    fontSize: 20,
-    marginRight: SPACING.SM,
-  },
-  
-  selectedInfoText: {
+  selectedConditionTitle: {
     ...TEXT_STYLES.BODY_LARGE,
     color: COLORS.PRIMARY,
-    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
+    fontWeight: '600',
+    marginBottom: SPACING.XS,
+  },
+  selectedConditionDescription: {
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_SECONDARY,
   },
 });
 
-export default ConditionSelector;

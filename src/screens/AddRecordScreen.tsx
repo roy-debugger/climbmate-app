@@ -74,8 +74,11 @@ const AddRecordScreen: React.FC<AddRecordScreenProps> = ({ navigation, route }) 
   const handleStartTimeChange = (event: any, selectedTime?: Date) => {
     setShowStartTimePicker(false);
     if (selectedTime) {
-      setRecord(prev => ({ ...prev, startTime: selectedTime }));
-      calculateTotalTime(selectedTime, prev.endTime);
+      setRecord(prev => {
+        const newRecord = { ...prev, startTime: selectedTime };
+        calculateTotalTime(selectedTime, prev.endTime);
+        return newRecord;
+      });
     }
   };
 
@@ -83,8 +86,11 @@ const AddRecordScreen: React.FC<AddRecordScreenProps> = ({ navigation, route }) 
   const handleEndTimeChange = (event: any, selectedTime?: Date) => {
     setShowEndTimePicker(false);
     if (selectedTime) {
-      setRecord(prev => ({ ...prev, endTime: selectedTime }));
-      calculateTotalTime(prev.startTime, selectedTime);
+      setRecord(prev => {
+        const newRecord = { ...prev, endTime: selectedTime };
+        calculateTotalTime(prev.startTime, selectedTime);
+        return newRecord;
+      });
     }
   };
 
@@ -479,7 +485,7 @@ const styles = StyleSheet.create({
   },
   
   selectedGymAddress: {
-    ...FONTS.BODY_SMALL,
+    ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.TEXT_SECONDARY,
   },
   
@@ -505,7 +511,7 @@ const styles = StyleSheet.create({
   },
   
   timeLabel: {
-    ...FONTS.LABEL,
+    ...TEXT_STYLES.LABEL,
     color: COLORS.TEXT_SECONDARY,
     marginBottom: SPACING.XS,
   },
@@ -527,7 +533,7 @@ const styles = StyleSheet.create({
   },
   
   totalTimeLabel: {
-    ...FONTS.BODY_MEDIUM,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_SECONDARY,
     marginRight: SPACING.SM,
   },
@@ -545,7 +551,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.GRAY_200,
     minHeight: 100,
-    ...FONTS.BODY_MEDIUM,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.TEXT_PRIMARY,
   },
   

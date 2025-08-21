@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, SIZES, FONTS } from '@/constants';
+import { COLORS, SIZES, FONTS, TEXT_STYLES } from '@/constants';
 
 const AddSessionScreen = () => {
   const [gymName, setGymName] = useState('');
@@ -71,7 +71,7 @@ const AddSessionScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.BACKGROUND,
   },
   keyboardView: {
     flex: 1,
@@ -80,13 +80,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.PRIMARY,
     padding: SIZES.padding,
     alignItems: 'center',
   },
   title: {
-    ...FONTS.h2,
-    color: COLORS.white,
+    ...TEXT_STYLES.H2,
+    color: COLORS.WHITE,
   },
   form: {
     padding: SIZES.padding,
@@ -95,33 +95,33 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.margin,
   },
   label: {
-    ...FONTS.body2,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: SIZES.base,
     fontWeight: '600',
   },
   input: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.SURFACE,
     padding: SIZES.padding,
     borderRadius: SIZES.radius,
     borderWidth: 1,
-    borderColor: COLORS.lightGray,
-    ...FONTS.body3,
+    borderColor: COLORS.GRAY_200,
+    ...TEXT_STYLES.BODY_MEDIUM,
   },
   textArea: {
     height: 100,
     paddingTop: SIZES.padding,
   },
   saveButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.PRIMARY,
     padding: SIZES.padding,
     borderRadius: SIZES.radius,
     alignItems: 'center',
     marginTop: SIZES.margin * 2,
   },
   saveButtonText: {
-    ...FONTS.body2,
-    color: COLORS.white,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.WHITE,
     fontWeight: '600',
   },
 });

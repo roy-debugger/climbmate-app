@@ -63,7 +63,7 @@ const GymDetailScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.BACKGROUND,
   },
   scrollView: {
     flex: 1,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   gymName: {
-    ...FONTS.h1,
+    ...TEXT_STYLES.H1,
     color: COLORS.WHITE,
     marginBottom: SIZES.margin,
     textAlign: 'center',
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rating: {
-    ...FONTS.h3,
+    ...TEXT_STYLES.H3,
     color: COLORS.WHITE,
     fontWeight: 'bold',
     marginRight: SIZES.base,
@@ -94,18 +94,18 @@ const styles = StyleSheet.create({
     marginRight: SIZES.base,
   },
   totalRatings: {
-    ...FONTS.body4,
+    ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.WHITE,
     opacity: 0.9,
   },
   section: {
     padding: SIZES.padding,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.lightGray,
+    borderBottomColor: COLORS.GRAY_200,
   },
   sectionTitle: {
-    ...FONTS.h3,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.H3,
+    color: COLORS.TEXT_PRIMARY,
     marginBottom: SIZES.margin,
   },
   address: {
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   hoursContainer: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.SURFACE,
     padding: SIZES.padding,
     borderRadius: SIZES.radius,
   },
@@ -124,8 +124,8 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.base,
   },
   day: {
-    ...FONTS.body3,
-    color: COLORS.textPrimary,
+    ...TEXT_STYLES.BODY_MEDIUM,
+    color: COLORS.TEXT_PRIMARY,
     fontWeight: '600',
   },
   time: {
@@ -138,11 +138,11 @@ const styles = StyleSheet.create({
     gap: SIZES.base,
   },
   facilityTag: {
-    backgroundColor: COLORS.secondary,
+    backgroundColor: COLORS.SECONDARY,
     paddingHorizontal: SIZES.padding,
     paddingVertical: SIZES.base,
     borderRadius: SIZES.radius,
-    ...FONTS.body4,
+    ...TEXT_STYLES.BODY_SMALL,
     color: COLORS.WHITE,
   },
   contact: {
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   actionButtonText: {
-    ...FONTS.body2,
+    ...TEXT_STYLES.BODY_MEDIUM,
     color: COLORS.WHITE,
     fontWeight: '600',
   },

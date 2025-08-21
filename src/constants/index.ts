@@ -58,11 +58,7 @@ export const LAYOUT = {
       MEDIUM: 44,
       LARGE: 52,
     },
-    PADDING: {
-      SMALL: 12,
-      MEDIUM: 16,
-      LARGE: 20,
-    },
+    PADDING: 16,
     BORDER_RADIUS: {
       SMALL: 6,
       MEDIUM: 8,

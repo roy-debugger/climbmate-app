@@ -166,9 +166,7 @@ const styles = StyleSheet.create({
     fontWeight: FONTS.WEIGHTS.BOLD,
   },
   
-  selectedGradeLabel: {
-    transform: [{ scale: 1.1 }],
-  },
+
   
   checkIcon: {
     position: 'absolute',

@@ -52,8 +52,8 @@ export const globalStyles = StyleSheet.create({
   },
   
   cardTitle: {
-    fontSize: FONTS.SIZES.MD,
-    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+    fontSize: FONTS.SIZES.BASE,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     color: COLORS.TEXT_PRIMARY,
   },
   
@@ -63,8 +63,8 @@ export const globalStyles = StyleSheet.create({
     borderRadius: LAYOUT.BUTTON.BORDER_RADIUS.MEDIUM,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: LAYOUT.BUTTON.PADDING.MEDIUM.horizontal,
-    paddingVertical: LAYOUT.BUTTON.PADDING.MEDIUM.vertical,
+    paddingHorizontal: LAYOUT.BUTTON.PADDING,
+    paddingVertical: LAYOUT.BUTTON.PADDING,
   },
   
   buttonPrimary: {
@@ -87,8 +87,8 @@ export const globalStyles = StyleSheet.create({
   },
   
   buttonText: {
-    fontSize: FONTS.SIZES.MD,
-    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+    fontSize: FONTS.SIZES.BASE,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     color: COLORS.WHITE,
   },
   
@@ -105,9 +105,9 @@ export const globalStyles = StyleSheet.create({
     height: LAYOUT.INPUT.HEIGHT.MEDIUM,
     backgroundColor: COLORS.SURFACE,
     borderRadius: LAYOUT.INPUT.BORDER_RADIUS.MEDIUM,
-    paddingHorizontal: LAYOUT.INPUT.PADDING.MEDIUM.horizontal,
-    paddingVertical: LAYOUT.INPUT.PADDING.MEDIUM.vertical,
-    fontSize: FONTS.SIZES.MD,
+    paddingHorizontal: LAYOUT.INPUT.PADDING,
+    paddingVertical: LAYOUT.INPUT.PADDING,
+    fontSize: FONTS.SIZES.BASE,
     color: COLORS.TEXT_PRIMARY,
     borderWidth: 1,
     borderColor: COLORS.GRAY_200,
@@ -127,8 +127,8 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: COLORS.PRIMARY,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: LAYOUT.HEADER.PADDING.MEDIUM.horizontal,
-    paddingVertical: LAYOUT.HEADER.PADDING.MEDIUM.vertical,
+    paddingHorizontal: LAYOUT.HEADER.PADDING,
+    paddingVertical: LAYOUT.HEADER.PADDING,
   },
   
   headerTitle: {
@@ -161,7 +161,7 @@ export const globalStyles = StyleSheet.create({
   
   modalTitle: {
     fontSize: FONTS.SIZES.LG,
-    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
     color: COLORS.TEXT_PRIMARY,
     textAlign: 'center',
   },
@@ -189,7 +189,7 @@ export const globalStyles = StyleSheet.create({
   
   listItemText: {
     flex: 1,
-    fontSize: FONTS.SIZES.MD,
+    fontSize: FONTS.SIZES.BASE,
     color: COLORS.TEXT_PRIMARY,
   },
   
@@ -224,7 +224,7 @@ export const globalStyles = StyleSheet.create({
   
   // 텍스트 관련
   textPrimary: {
-    fontSize: FONTS.SIZES.MD,
+    fontSize: FONTS.SIZES.BASE,
     color: COLORS.TEXT_PRIMARY,
   },
   
@@ -248,7 +248,7 @@ export const globalStyles = StyleSheet.create({
   },
   
   textSemibold: {
-    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },
   
   textCenter: {
@@ -320,9 +320,9 @@ export const createCardStyle = (
   return [
     globalStyles.card,
     {
-      padding: LAYOUT.CARD.PADDING[padding],
-      marginBottom: LAYOUT.CARD.MARGIN[margin],
-      ...LAYOUT.SHADOW[shadow],
+      padding: LAYOUT.CARD.PADDING.MEDIUM,
+      marginBottom: LAYOUT.CARD.MARGIN.MEDIUM,
+      ...LAYOUT.SHADOW.MEDIUM,
     },
   ];
 };

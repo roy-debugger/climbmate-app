@@ -7,7 +7,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { COLORS, SPACING, FONTS, LAYOUT } from '@/constants';
+import { COLORS, SPACING, FONTS, LAYOUT, TEXT_STYLES } from '@/constants';
 import { globalStyles } from '@/styles/globalStyles';
 import { ButtonProps } from '@/types/common';
 
@@ -104,11 +104,11 @@ const CustomButton: React.FC<ButtonProps> = ({
   const getTextSizeStyle = (): TextStyle => {
     switch (size) {
       case 'small':
-        return FONTS.BUTTON_SMALL;
+        return TEXT_STYLES.BUTTON_SMALL;
       case 'large':
-        return FONTS.BUTTON_LARGE;
+        return TEXT_STYLES.BUTTON_LARGE;
       default:
-        return FONTS.BUTTON_MEDIUM;
+        return TEXT_STYLES.BUTTON_MEDIUM;
     }
   };
   
@@ -158,20 +158,20 @@ const styles = StyleSheet.create({
   // 크기별 스타일
   small: {
     height: LAYOUT.BUTTON.HEIGHT.SMALL,
-    paddingHorizontal: LAYOUT.BUTTON.PADDING.SMALL.horizontal,
-    paddingVertical: LAYOUT.BUTTON.PADDING.SMALL.vertical,
+    paddingHorizontal: LAYOUT.BUTTON.PADDING,
+    paddingVertical: LAYOUT.BUTTON.PADDING,
   },
   
   medium: {
     height: LAYOUT.BUTTON.HEIGHT.MEDIUM,
-    paddingHorizontal: LAYOUT.BUTTON.PADDING.MEDIUM.horizontal,
-    paddingVertical: LAYOUT.BUTTON.PADDING.MEDIUM.vertical,
+    paddingHorizontal: LAYOUT.BUTTON.PADDING,
+    paddingVertical: LAYOUT.BUTTON.PADDING,
   },
   
   large: {
     height: LAYOUT.BUTTON.HEIGHT.LARGE,
-    paddingHorizontal: LAYOUT.BUTTON.PADDING.LARGE.horizontal,
-    paddingVertical: LAYOUT.BUTTON.PADDING.LARGE.vertical,
+    paddingHorizontal: LAYOUT.BUTTON.PADDING,
+    paddingVertical: LAYOUT.BUTTON.PADDING,
   },
   
   // variant별 스타일
@@ -204,20 +204,20 @@ const styles = StyleSheet.create({
   
   textLight: {
     color: COLORS.WHITE,
-    fontSize: FONTS.SIZES.MD,
-    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+    fontSize: FONTS.SIZES.BASE,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },
   
   textPrimary: {
     color: COLORS.PRIMARY,
-    fontSize: FONTS.SIZES.MD,
-    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+    fontSize: FONTS.SIZES.BASE,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },
   
   textDisabled: {
     color: COLORS.TEXT_DISABLED,
-    fontSize: FONTS.SIZES.MD,
-    fontWeight: FONTS.WEIGHTS.SEMIBOLD,
+    fontSize: FONTS.SIZES.BASE,
+    fontWeight: FONTS.WEIGHTS.SEMI_BOLD,
   },
   
   // 아이콘 스타일

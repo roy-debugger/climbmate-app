@@ -190,3 +190,77 @@ export const throttle = <T extends (...args: any[]) => any>(
     }
   };
 };
+
+// Alert 유틸리티 함수들
+export const showAlert = (title: string, message: string, onConfirm?: () => void) => {
+  if (typeof window !== 'undefined') {
+    // 웹 환경
+    if (onConfirm) {
+      const confirmed = window.confirm(`${title}\n${message}`);
+      if (confirmed) {
+        onConfirm();
+      }
+    } else {
+      window.alert(`${title}\n${message}`);
+    }
+  } else {
+    // 모바일 환경
+    const { Alert } = require('react-native');
+    if (onConfirm) {
+      Alert.alert(title, message, [
+        { text: '취소', style: 'cancel' },
+        { text: '확인', onPress: onConfirm }
+      ]);
+    } else {
+      Alert.alert(title, message, [{ text: '확인' }]);
+    }
+  }
+};
+
+export const showConfirm = (title: string, message: string, onConfirm: () => void, onCancel?: () => void) => {
+  if (typeof window !== 'undefined') {
+    // 웹 환경
+    const confirmed = window.confirm(`${title}\n${message}`);
+    if (confirmed) {
+      onConfirm();
+    } else if (onCancel) {
+      onCancel();
+    }
+  } else {
+    // 모바일 환경
+    const { Alert } = require('react-native');
+    Alert.alert(title, message, [
+      { text: '취소', style: 'cancel', onPress: onCancel },
+      { text: '확인', onPress: onConfirm }
+    ]);
+  }
+};
+
+// 간단한 확인 다이얼로그 (확인만 있는 경우)
+export const showSimpleConfirm = (message: string, onConfirm: () => void) => {
+  if (typeof window !== 'undefined') {
+    // 웹 환경
+    const confirmed = window.confirm(message);
+    if (confirmed) {
+      onConfirm();
+    }
+  } else {
+    // 모바일 환경
+    const { Alert } = require('react-native');
+    Alert.alert('확인', message, [
+      { text: '확인', onPress: onConfirm }
+    ]);
+  }
+};
+
+export const showError = (message: string) => {
+  showAlert('오류', message);
+};
+
+export const showSuccess = (message: string, onConfirm?: () => void) => {
+  showAlert('성공', message, onConfirm);
+};
+
+export const showWarning = (message: string, onConfirm?: () => void) => {
+  showAlert('경고', message, onConfirm);
+};

@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import { SPACING } from '../constants/spacing';
 import { FONTS } from '../constants/typography';
+import { showSuccess, showError } from '../utils';
 import KakaoLoginButton from './KakaoLoginButton';
 import useAuthStore from '../store/authStore';
 import { mockKakaoService } from '../services/kakaoService';
@@ -28,11 +29,11 @@ const WelcomeScreen: React.FC = () => {
       // 인증 스토어에 사용자 정보 저장
       kakaoLogin(kakaoUser);
       
-      Alert.alert('🎉 로그인 성공!', '프로필을 완성해주세요.');
+      showSuccess('🎉 로그인 성공! 프로필을 완성해주세요.');
       
     } catch (error) {
       console.error('❌ 카카오 로그인 실패:', error);
-      Alert.alert('❌ 로그인 실패', '다시 시도해주세요.');
+      showError('❌ 로그인 실패 다시 시도해주세요.');
     } finally {
       setLoading(false);
     }

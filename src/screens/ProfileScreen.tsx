@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { showConfirm } from '../utils';
 import useAuthStore from '../store/authStore';
 import OnboardingService from '../services/OnboardingService';
 
@@ -12,40 +13,10 @@ const ProfileScreen = () => {
     console.log('🔍 현재 user 상태:', user);
     console.log('🔍 logout 함수 존재 여부:', typeof logout);
     
-    // 웹에서도 동작하는 로그아웃 로직
-    if (typeof window !== 'undefined') {
-      // 웹 환경
-      console.log('🌐 웹 환경에서 로그아웃 실행');
-      const confirmed = window.confirm('정말 로그아웃하시겠습니까?');
-      if (confirmed) {
-        console.log('✅ 웹 confirm 확인됨, 로그아웃 실행');
-        logout();
-      } else {
-        console.log('❌ 웹 confirm 취소됨');
-      }
-    } else {
-      // 모바일 환경
-      console.log('📱 모바일 환경에서 로그아웃 실행');
-      Alert.alert(
-        '로그아웃',
-        '정말 로그아웃하시겠습니까?',
-        [
-          {
-            text: '취소',
-            style: 'cancel',
-            onPress: () => console.log('❌ 로그아웃 취소됨'),
-          },
-          {
-            text: '로그아웃',
-            style: 'destructive',
-            onPress: () => {
-              console.log('🚪 로그아웃 실행');
-              logout();
-            },
-          },
-        ]
-      );
-    }
+    showConfirm('로그아웃', '정말 로그아웃하시겠습니까?', () => {
+      console.log('🚪 로그아웃 실행');
+      logout();
+    });
   };
 
   const handleResetOnboarding = async () => {

@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS, SPACING, FONTS, LAYOUT } from '../constants';
 import { globalStyles } from '../styles/globalStyles';
+import { showAlert, showConfirm, showError, showSimpleConfirm } from '../utils';
 import { GymSelector } from '../components/record/GymSelector';
 import { ConditionSelector } from '../components/record/ConditionSelector';
 import { GradeSelector } from '../components/record/GradeSelector';
@@ -149,35 +150,17 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
   const handleSave = () => {
     // 유효성 검사
     if (!record.gym) {
-      if (typeof window !== 'undefined') {
-        // 웹 환경
-        window.alert('암장을 선택해주세요.');
-      } else {
-        // 모바일 환경
-        Alert.alert('알림', '암장을 선택해주세요.');
-      }
+      showError('암장을 선택해주세요.');
       return;
     }
 
     if (!record.condition) {
-      if (typeof window !== 'undefined') {
-        // 웹 환경
-        window.alert('컨디션을 선택해주세요.');
-      } else {
-        // 모바일 환경
-        Alert.alert('알림', '컨디션을 선택해주세요.');
-      }
+      showError('컨디션을 선택해주세요.');
       return;
     }
 
     if (record.grade.length === 0) {
-      if (typeof window !== 'undefined') {
-        // 웹 환경
-        window.alert('등반 문제를 선택해주세요.');
-      } else {
-        // 모바일 환경
-        Alert.alert('알림', '등반 문제를 선택해주세요.');
-      }
+      showError('등반 문제를 선택해주세요.');
       return;
     }
 
@@ -187,53 +170,16 @@ export const AddRecordScreen: React.FC<AddRecordScreenProps> = ({
     // 임시로 console.log 출력
     console.log('저장된 기록:', record);
     
-    if (typeof window !== 'undefined') {
-      // 웹 환경
-      const confirmed = window.confirm('운동 기록이 저장되었습니다. 이전 화면으로 돌아가시겠습니까?');
-      if (confirmed) {
-        navigation.goBack();
-      }
-    } else {
-      // 모바일 환경
-      Alert.alert(
-        '저장 완료',
-        '운동 기록이 저장되었습니다.',
-        [
-          {
-            text: '확인',
-            onPress: () => {
-              // 이전 화면으로 돌아가기
-              navigation.goBack();
-            },
-          },
-        ]
-      );
-    }
+    showSimpleConfirm('운동 기록이 저장되었습니다. 이전 화면으로 돌아가시겠습니까?', () => {
+      navigation.goBack();
+    });
   };
 
   // 취소
   const handleCancel = () => {
-    if (typeof window !== 'undefined') {
-      // 웹 환경
-      const confirmed = window.confirm('작성 중인 내용이 사라집니다. 정말 취소하시겠습니까?');
-      if (confirmed) {
-        navigation.goBack();
-      }
-    } else {
-      // 모바일 환경
-      Alert.alert(
-        '작성 취소',
-        '작성 중인 내용이 사라집니다. 정말 취소하시겠습니까?',
-        [
-          { text: '계속 작성', style: 'cancel' },
-          {
-            text: '취소',
-            style: 'destructive',
-            onPress: () => navigation.goBack(),
-          },
-        ]
-      );
-    }
+    showConfirm('작성 취소', '작성 중인 내용이 사라집니다. 정말 취소하시겠습니까?', () => {
+      navigation.goBack();
+    });
   };
 
   // 시간 포맷팅
